@@ -16,7 +16,7 @@ require("lazy").setup({
     require("plugins.lsp"),
     require("plugins.go"),
     require("plugins.formatter"),
-    require("plugins.bufferline"), -- ← НОВОЕ: вкладки как в VSCode
+    --  require("plugins.bufferline"), -- ← НОВОЕ: вкладки как в VSCode
     require("plugins.telescope"),
     -- require("plugins.explorer"),
 --    require("config.terminal"),

@@ -21,10 +21,16 @@ map("n", "<C-j>", "<C-w>j", { desc = "Go Down" })
 --map("n", "<leader>er", ":NvimTreeFocus<CR>", { desc = "Focus NvimTree" })
 
 -- ==================== Вкладки и буферы ====================
-map("n", "<Tab>", ":BufferLineCycleNext<CR>", { desc = "Next Buffer" })
-map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>", { desc = "Previous Buffer" })
+--map("n", "<Tab>", ":BufferLineCycleNext<CR>", { desc = "Next Buffer" })
+--map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>", { desc = "Previous Buffer" })
+--map("n", "<leader>bd", ":bd<CR>", { desc = "Close Buffer" })
+--map("n", "<leader>bp", ":BufferLinePick<CR>", { desc = "Pick Buffer" })
+
+-- Удобное переключение между буферами (вкладками)
+map("n", "<Tab>", ":bnext<CR>", { desc = "Next Buffer" })
+map("n", "<S-Tab>", ":bprevious<CR>", { desc = "Previous Buffer" })
 map("n", "<leader>bd", ":bd<CR>", { desc = "Close Buffer" })
-map("n", "<leader>bp", ":BufferLinePick<CR>", { desc = "Pick Buffer" })
+map("n", "<leader>bp", ":ls<CR>:b ", { desc = "List and switch buffer" })
 
 -- ==================== QoL улучшения (как в VSCode) ====================
 -- Дублирование строки
