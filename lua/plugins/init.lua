@@ -13,7 +13,7 @@ require("lazy").setup({
     require("plugins.theme"),
     require("plugins.vscode"),
     require("plugins.treesitter"),
-    -- blink require("plugins.completion"), 
+    require("plugins.completion"), 
     require("plugins.lsp"),
     require("plugins.go"),
     require("plugins.formatter"),
