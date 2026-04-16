@@ -15,18 +15,28 @@ return {
         nerd_font_variant = "mono",
       },
 
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-        providers = {
-          buffer = {
-            min_keyword_length = 4,   -- не спамить короткими словами
-            max_items = 5,
-          },
-          snippets = {
-            score_offset = -1,        -- LSP выше сниппетов
-          },
-        },
-      },
+sources = {
+  default = { "lsp", "path", "snippets", "buffer" },
+  providers = {
+    snippets = {
+      score_offset = -1,
+      -- не показывать сниппеты внутри строк
+      should_show_items = function()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        local line = vim.api.nvim_get_current_line()
+        local before = line:sub(1, col)
+        -- если курсор внутри кавычек — скрыть сниппеты
+        local _, sq = before:gsub("'", "")
+        local _, dq = before:gsub('"', "")
+        return sq % 2 == 0 and dq % 2 == 0
+      end,
+    },
+    buffer = {
+      min_keyword_length = 4,
+      max_items = 5,
+    },
+  },
+},
 
       fuzzy = {
         -- use_typo_resistance / use_frecency / use_proximity убраны
