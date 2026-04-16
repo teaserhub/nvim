@@ -1,0 +1,28 @@
+# Плагины (будут скачаны через Lazy)
+lazy/
+plugin/
+packer_compiled.lua
+
+# Кэш LSP
+.cache/
+mason/
+
+# Бэкапы и свапы
+*.swp
+*.swo
+*~
+*.bak
+
+# Данные сессий
+sessions/
+
+# Локальные настройки (ключи API, приватные пути)
+local.lua
+secret.lua
+.env
+
+# Спёртый плагинами мусор
+*.log
+*.lock
+spell/
+undodir/
