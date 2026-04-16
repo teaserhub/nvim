@@ -1,0 +1,47 @@
+-- lua/config/keymaps.lua
+local map = vim.keymap.set
+
+-- Основные клавиши (без which-key)
+map("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Toggle Explorer" })
+map("n", "<leader>z", ":ZenMode<CR>", { desc = "Zen Mode" })
+
+-- Telescope
+map("n", "<leader>ff", ":Telescope find_files<CR>", { desc = "Find Files" })
+map("n", "<leader>fg", ":Telescope live_grep<CR>", { desc = "Live Grep" })
+map("n", "<leader>fr", ":Telescope oldfiles<CR>", { desc = "Recent Files" })
+map("n", "<leader>fb", ":Telescope buffers<CR>", { desc = "Buffers" })
+
+-- Вкладки / Буферы
+map("n", "<Tab>", ":BufferLineCycleNext<CR>", { desc = "Next Buffer" })
+map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>", { desc = "Previous Buffer" })
+map("n", "<leader>bd", ":bd<CR>", { desc = "Close Buffer" })
+map("n", "<leader>bp", ":BufferLinePick<CR>", { desc = "Pick Buffer" })
+
+-- Go
+map("n", "<leader>gt", ":GoTest<CR>", { desc = "Run Tests" })
+map("n", "<leader>gc", ":GoCoverage<CR>", { desc = "Coverage" })
+map("n", "<leader>gr", ":GoRun<CR>", { desc = "Go Run" })
+map("n", "<leader>gb", ":GoBuild<CR>", { desc = "Go Build" })
+map("n", "<leader>gd", ":GoDebug<CR>", { desc = "Start Debug" })
+
+-- LSP
+map("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+map("n", "gr", vim.lsp.buf.references, { desc = "References" })
+map("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
+map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Actions" })
+map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
+
+-- Debug
+map("n", "<F5>", ":DapContinue<CR>", { desc = "Debug Continue" })
+map("n", "<F10>", ":DapStepOver<CR>", { desc = "Step Over" })
+map("n", "<F11>", ":DapStepInto<CR>", { desc = "Step Into" })
+map("n", "<F12>", ":DapStepOut<CR>", { desc = "Step Out" })
+map("n", "<leader>db", ":DapToggleBreakpoint<CR>", { desc = "Toggle Breakpoint" })
+map("n", "<leader>du", ":lua require('dapui').toggle()<CR>", { desc = "Toggle Debug UI" })
+
+-- Терминал
+map("n", "<C-\\>", ":ToggleTerm<CR>", { desc = "Toggle Terminal" })
+map("n", "<leader>tt", ":ToggleTerm<CR>", { desc = "Toggle Terminal" })
+
+-- Сессии
+map("n", "<leader>qs", ":lua require('persistence').load()<CR>", { desc = "Restore Session" })
