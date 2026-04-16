@@ -11,7 +11,8 @@ return {
       },
 
       appearance = {
-        use_nvim_cmp_as_default = true,
+highlight_ns = vim.api.nvim_create_namespace("blink_cmp"),
+        -- use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",
       },
 
@@ -22,7 +23,7 @@ return {
       completion = {
         menu = { border = "rounded" },
         documentation = {
-          auto_show = true,
+          auto_show = true, -- Показывает описание функции сейчас отключен
           window = { border = "rounded" },
         },
         ghost_text = { enabled = true },
