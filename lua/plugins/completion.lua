@@ -2,7 +2,7 @@
 return {
   "saghen/blink.cmp",
   lazy = false,
-  version = "1.*",   -- стабильные бинарники, не "*"
+  version = "1.*",
   dependencies = { "rafamadriz/friendly-snippets" },
 
   config = function()
@@ -11,36 +11,86 @@ return {
       keymap = { preset = "super-tab" },
 
       appearance = {
-        -- use_nvim_cmp_as_default устарело и будет удалено — убираем
         nerd_font_variant = "mono",
       },
 
-sources = {
-  default = { "lsp", "path", "snippets", "buffer" },
-  providers = {
-    snippets = {
-      score_offset = -1,
-      -- не показывать сниппеты внутри строк
-      should_show_items = function()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        local line = vim.api.nvim_get_current_line()
-        local before = line:sub(1, col)
-        -- если курсор внутри кавычек — скрыть сниппеты
-        local _, sq = before:gsub("'", "")
-        local _, dq = before:gsub('"', "")
-        return sq % 2 == 0 and dq % 2 == 0
-      end,
-    },
-    buffer = {
-      min_keyword_length = 4,
-      max_items = 5,
-    },
-  },
-},
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+
+        -- глобальный фильтр: ничего не показывать в комментариях
+        transform_items = function(_, items)
+          local col = vim.api.nvim_win_get_cursor(0)[2]
+          local before = vim.api.nvim_get_current_line():sub(1, col)
+          local in_comment = (
+            before:match("^%s*%-%-") or -- Lua
+            before:match("^%s*//")  or -- Go, JS, TS, C
+            before:match("^%s*#")      -- Python, Ruby, Shell
+          )
+          if in_comment then return {} end
+          return items
+        end,
+
+        providers = {
+          lsp = {
+            -- LSP не показывать в комментариях (доп. защита)
+            should_show_items = function()
+              local col = vim.api.nvim_win_get_cursor(0)[2]
+              local before = vim.api.nvim_get_current_line():sub(1, col)
+              return not (
+                before:match("^%s*%-%-") or
+                before:match("^%s*//")  or
+                before:match("^%s*#")
+              )
+            end,
+          },
+
+          snippets = {
+            score_offset = -1,
+            -- сниппеты не показывать внутри строк
+            should_show_items = function()
+              local col = vim.api.nvim_win_get_cursor(0)[2]
+              local before = vim.api.nvim_get_current_line():sub(1, col)
+              local _, dq = before:gsub('"', "")
+              local _, sq = before:gsub("'", "")
+              local _, bq = before:gsub("`", "")
+              return dq % 2 == 0 and sq % 2 == 0 and bq % 2 == 0
+            end,
+          },
+
+          buffer = {
+            min_keyword_length = 4,
+            max_items = 5,
+            -- buffer не показывать внутри строк и комментариев
+            should_show_items = function()
+              local col = vim.api.nvim_win_get_cursor(0)[2]
+              local line = vim.api.nvim_get_current_line()
+              local before = line:sub(1, col)
+              if
+                before:match("^%s*%-%-") or
+                before:match("^%s*//")  or
+                before:match("^%s*#")
+              then
+                return false
+              end
+              local _, dq = before:gsub('"', "")
+              local _, sq = before:gsub("'", "")
+              local _, bq = before:gsub("`", "")
+              return dq % 2 == 0 and sq % 2 == 0 and bq % 2 == 0
+            end,
+          },
+
+          path = {
+            -- path только когда реально пишешь путь
+            should_show_items = function()
+              local col = vim.api.nvim_win_get_cursor(0)[2]
+              local before = vim.api.nvim_get_current_line():sub(1, col)
+              return before:match('["\'`]%.?/') ~= nil
+            end,
+          },
+        },
+      },
 
       fuzzy = {
-        -- use_typo_resistance / use_frecency / use_proximity убраны
-        -- в v1.x правильный ключ:
         implementation = "prefer_rust_with_warning",
       },
 
@@ -55,7 +105,7 @@ sources = {
         list = {
           selection = {
             preselect = true,
-            auto_insert = false,   -- не вставлять до явного подтверждения
+            auto_insert = false,
           },
         },
 
@@ -67,7 +117,7 @@ sources = {
         menu = {
           border = "rounded",
           draw = {
-            treesitter = { "lsp" },   -- подсветка синтаксиса в меню
+            treesitter = { "lsp" },
             columns = {
               { "kind_icon" },
               { "label", "label_description", gap = 1 },
