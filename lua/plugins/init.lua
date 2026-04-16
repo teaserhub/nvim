@@ -18,7 +18,7 @@ require("lazy").setup({
     require("plugins.formatter"),
     --  require("plugins.bufferline"), -- ← НОВОЕ: вкладки как в VSCode
     require("plugins.telescope"),
-    -- require("plugins.explorer"),
+    -- require("plugins.noice"),
 --    require("config.terminal"),
     require("plugins.statusline"),
     require("plugins.git"),
