@@ -16,3 +16,4 @@ opt.clipboard = "unnamedplus"
 opt.scrolloff = 8
 
 opt.showtabline = 2
+vim.opt.hidden = true -- Оставляет буферы в памяти при переключении
