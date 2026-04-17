@@ -11,7 +11,7 @@ map("n", "<leader>q", "<cmd>q<cr>")
 
 -- buffers
 map("n", "<leader>bd", "<cmd>bdelete<cr>")
-
+-- map({ "n", "t" }, "<C-\\>", "<cmd>ToggleTerm<cr>")
 -- yazi
 -- открыть oil в cwd
 

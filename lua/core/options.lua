@@ -14,10 +14,21 @@ opt.signcolumn = "yes"
 
 opt.clipboard = "unnamedplus"
 opt.scrolloff = 8
+
+vim.opt.laststatus = 3
+vim.opt.cmdheight = 1
+
 -- ✨ Подсветка скопированного текста (yank)
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 150 })
+	end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+	pattern = "term://*",
+	callback = function()
+		vim.cmd("startinsert")
 	end,
 })
 
