@@ -1,19 +1,19 @@
 -- ~/.config/nvim/lua/plugins/utils.lua
 return {
 	-- 1️⃣ 📝 Авто-сохранение (умное, не трогает temp/readonly/терминалы)
-	{
-		"Pocco81/auto-save.nvim",
-		event = "VeryLazy",
-		config = function()
-			require("auto-save").setup({
-				execution_message = false,
-				trigger_events = { "InsertLeave", "TextChanged" },
-				condition = function(buf)
-					return vim.bo[buf].buftype == "" and vim.bo[buf].modifiable
-				end,
-			})
-		end,
-	},
+	--{
+	--	"Pocco81/auto-save.nvim",
+	--	event = "VeryLazy",
+	--	config = function()
+	--		require("auto-save").setup({
+	--			execution_message = false,
+	--			trigger_events = { "InsertLeave", "TextChanged" },
+	--			condition = function(buf)
+	--				return vim.bo[buf].buftype == "" and vim.bo[buf].modifiable
+	--			end,
+	--		})
+	--	end,
+	--},
 
 	-- 3️⃣ 💬 Умное комментирование (gcc, gc в визуальном режиме)
 	{
