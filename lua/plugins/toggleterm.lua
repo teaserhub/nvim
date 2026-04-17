@@ -1,42 +1,42 @@
 -- ~/.config/nvim/lua/plugins/terminal_session.lua
 return {
 	-- 1️⃣ ToggleTerm: гибкий терминал с плавающими и встроенными окнами
-	{
-		"akinsho/toggleterm.nvim",
-		version = "*",
-		keys = {
-			{ "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Терминал: Переключить" },
-			{
-				"<leader>tf",
-				"<cmd>ToggleTerm direction=float<cr>",
-				desc = "Терминал: Плавающее окно",
-			},
-			{ "<leader>th", "<cmd>ToggleTerm direction=horizontal size=15<cr>", desc = "Терминал: Снизу" },
-			{ "<leader>tv", "<cmd>ToggleTerm direction=vertical size=60<cr>", desc = "Терминал: Справа" },
-			{ "<leader>ts", "<cmd>TermExec cmd='lazygit'<cr>", desc = "Git: Lazygit" },
-		},
-		config = function()
-			require("toggleterm").setup({
-				size = 15,
-				open_mapping = [[<c-\>]], -- быстрый toggle из любого режима
-				hide_numbers = true,
-				shade_terminals = true,
-				shading_factor = 2,
-				start_in_insert = true,
-				insert_mappings = true,
-				persist_size = true,
-				direction = "float",
-				close_on_exit = true,
-				shell = vim.o.shell,
-				float_opts = {
-					border = "rounded",
-					width = math.floor(vim.o.columns * 0.85),
-					height = math.floor(vim.o.lines * 0.85),
-					winblend = 3,
-				},
-			})
-		end,
-	},
+	-- {
+	-- 	"akinsho/toggleterm.nvim",
+	-- 	version = "*",
+	-- 	keys = {
+	-- 		{ "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Терминал: Переключить" },
+	-- 		{
+	-- 			"<leader>tf",
+	-- 			"<cmd>ToggleTerm direction=float<cr>",
+	-- 			desc = "Терминал: Плавающее окно",
+	-- 		},
+	-- 		{ "<leader>th", "<cmd>ToggleTerm direction=horizontal size=15<cr>", desc = "Терминал: Снизу" },
+	-- 		{ "<leader>tv", "<cmd>ToggleTerm direction=vertical size=60<cr>", desc = "Терминал: Справа" },
+	-- 		{ "<leader>ts", "<cmd>TermExec cmd='lazygit'<cr>", desc = "Git: Lazygit" },
+	-- 	},
+	-- 	config = function()
+	-- 		require("toggleterm").setup({
+	-- 			size = 15,
+	-- 			open_mapping = [[<c-\>]], -- быстрый toggle из любого режима
+	-- 			hide_numbers = true,
+	-- 			shade_terminals = true,
+	-- 			shading_factor = 2,
+	-- 			start_in_insert = true,
+	-- 			insert_mappings = true,
+	-- 			persist_size = true,
+	-- 			direction = "float",
+	-- 			close_on_exit = true,
+	-- 			shell = vim.o.shell,
+	-- 			float_opts = {
+	-- 				border = "rounded",
+	-- 				width = math.floor(vim.o.columns * 0.85),
+	-- 				height = math.floor(vim.o.lines * 0.85),
+	-- 				winblend = 3,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	-- 2️⃣ Persisted: автосохранение и восстановление сессий
 	{
 		"olimorris/persisted.nvim",
