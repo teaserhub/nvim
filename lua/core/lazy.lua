@@ -9,7 +9,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
-
+vim.opt.showtabline = 2
+vim.opt.hidden = true
 require("lazy").setup({
     { import = "plugins" }
 })

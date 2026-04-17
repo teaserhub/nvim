@@ -5,12 +5,9 @@ return {
     "akinsho/bufferline.nvim",
     version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    -- Загружаем на раннем этапе, но не блокируя старт
+    event = "VeryLazy",
     config = function()
-      -- ✅ Гарантируем, что все открытые буферы сразу попадают в строку
-      vim.api.nvim_create_autocmd("BufAdd", {
-        callback = function() vim.bo.buflisted = true end
-      })
-
       require("bufferline").setup({
         options = {
           mode = "buffers",
@@ -24,22 +21,27 @@ return {
           },
         },
       })
+      -- 🛠 Форсируем отрисовку bufferline сразу после загрузки интерфейса
+      vim.api.nvim_create_autocmd("UIEnter", {
+        once = true,
+        callback = function() vim.cmd("redrawstatus") end,
+      })
     end,
     keys = {
       { "<leader>bn", "<cmd>BufferLineCycleNext<cr>", desc = "Следующий буфер" },
       { "<leader>bp", "<cmd>BufferLineCyclePrev<cr>", desc = "Предыдущий буфер" },
       { "<leader>bc", "<cmd>bdelete<cr>", desc = "Закрыть текущий буфер" },
       { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Закрыть остальные" },
-      -- 🔑 Навигация через Tab (только в Normal режиме, чтобы не ломать автодополнение)
-      { "<Tab>",   "<cmd>BufferLineCycleNext<cr>", desc = "Следующий буфер (Tab)" },
-      { "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", desc = "Предыдущий буфер (Shift+Tab)" },
+      { "<Tab>",   "<cmd>BufferLineCycleNext<cr>", desc = "Следующий буфер (Tab)", mode = "n" },
+      { "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", desc = "Предыдущий буфер (Shift+Tab)", mode = "n" },
     },
   },
 
-  -- 2️⃣ Lualine (без изменений, просто для полноты)
+  -- 2️⃣ Lualine (без изменений)
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     config = function()
       require("lualine").setup({
         options = {
