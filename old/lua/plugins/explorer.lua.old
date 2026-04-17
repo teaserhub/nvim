@@ -1,0 +1,58 @@
+-- lua/plugins/explorer.lua
+return {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+        require("nvim-tree").setup({
+            -- Оптимизации производительности
+            disable_netrw = true,
+            hijack_netrw = true,
+            respect_buf_cwd = true,
+            sync_root_with_cwd = true,
+
+            view = {
+                width = 35,
+                side = "left",
+                preserve_window_proportions = true,
+                number = false,
+                relativenumber = false,
+            },
+
+            renderer = {
+                group_empty = true,
+                highlight_git = true,
+                icons = {
+                    show = {
+                        file = true,
+                        folder = true,
+                        folder_arrow = true,
+                        git = true,
+                    },
+                },
+            },
+
+            filters = {
+                dotfiles = false,
+                custom = { "^.git$" },
+            },
+
+            -- Важно: отключаем тяжёлые функции, которые тормозят
+            actions = {
+                open_file = {
+                    quit_on_open = false, -- не закрывать дерево после открытия файла
+                    resize_window = true,
+                },
+            },
+
+            update_focused_file = {
+                enable = true,
+                debounce_delay = 15,
+            },
+
+            -- Ускоряем отрисовку
+            log = {
+                enable = false,
+            },
+        })
+    end,
+}

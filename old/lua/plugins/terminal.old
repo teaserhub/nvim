@@ -1,0 +1,25 @@
+-- lua/plugins/terminal.lua
+return {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    config = function()
+        require("toggleterm").setup({
+            size = 15,
+            open_mapping = [[<C-\>]], -- Ctrl + \  — открыть/закрыть терминал
+            hide_numbers = true,
+            shade_terminals = true,
+            shading_factor = 2,
+            start_in_insert = true,
+            direction = "horizontal", -- horizontal / vertical / float
+            float_opts = { border = "rounded" },
+        })
+
+        -- Дополнительные клавиши
+        vim.keymap.set("t", "<C-\\>", "<C-\\><C-n>")
+        vim.keymap.set("t", "jk", "<C-\\><C-n>")
+        --    vim.keymap.set("n", "<leader>t", ":split | terminal<CR>", { desc = "Terminal" })
+        --  vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+        --  vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", { desc = "Toggle Terminal" })
+        --  vim.keymap.set("n", "<leader>tg", "<cmd>ToggleTerm direction=vertical<CR>", { desc = "Toggle Vertical Terminal" })
+    end,
+}
