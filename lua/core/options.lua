@@ -17,6 +17,7 @@ opt.scrolloff = 8
 
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 1
+vim.opt.winbar = " "
 
 -- ✨ Подсветка скопированного текста (yank)
 vim.api.nvim_create_autocmd("TextYankPost", {
