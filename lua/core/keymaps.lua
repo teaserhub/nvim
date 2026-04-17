@@ -9,6 +9,9 @@ map("t", "<Esc>", [[<C-\><C-n>]])
 map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>q", "<cmd>q<cr>")
 
+vim.keymap.set("n", "<Tab>", ":bnext<CR>")
+vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>")
+
 -- buffers
 map("n", "<leader>bd", "<cmd>bdelete<cr>")
 -- map({ "n", "t" }, "<C-\\>", "<cmd>ToggleTerm<cr>")
