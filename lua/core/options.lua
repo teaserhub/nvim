@@ -27,5 +27,3 @@ vim.opt.splitright = true -- новые вертикальные сплиты с
 vim.opt.updatetime = 300 -- быстрее обновление gitsigns, lsp, cursorhold
 vim.opt.completeopt = "menuone,noinsert,noselect" -- улучшение меню cmp
 vim.opt.wildmode = "longest:full,full" -- умное автодополнение в cmdline (:e, :bd и т.д.)
---opt.showtabline = 2
---vim.opt.hidden = true -- Оставляет буферы в памяти при переключении
