@@ -25,45 +25,45 @@ return {
 	},
 
 	-- 4️⃣ 🚀 Мгновенный поиск по тексту (замена f/F/t/T)
-	{
-		"folke/flash.nvim",
-		event = "VeryLazy",
-		config = function()
-			require("flash").setup()
-		end,
-		keys = {
-			{
-				"s",
-				mode = { "n", "x", "o" },
-				function()
-					require("flash").jump()
-				end,
-				desc = "Flash Jump",
-			},
-			{
-				"S",
-				mode = { "n", "x", "o" },
-				function()
-					require("flash").treesitter()
-				end,
-				desc = "Flash AST",
-			},
-			{
-				"r",
-				mode = "o",
-				function()
-					require("flash").remote()
-				end,
-				desc = "Remote Flash",
-			},
-			{
-				"R",
-				mode = { "n", "x" },
-				function()
-					require("flash").treesitter_search()
-				end,
-				desc = "Flash TS Search",
-			},
-		},
-	},
+	-- {
+	-- 	"folke/flash.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("flash").setup()
+	-- 	end,
+	-- 	keys = {
+	-- 		{
+	-- 			"s",
+	-- 			mode = { "n", "x", "o" },
+	-- 			function()
+	-- 				require("flash").jump()
+	-- 			end,
+	-- 			desc = "Flash Jump",
+	-- 		},
+	-- 		{
+	-- 			"S",
+	-- 			mode = { "n", "x", "o" },
+	-- 			function()
+	-- 				require("flash").treesitter()
+	-- 			end,
+	-- 			desc = "Flash AST",
+	-- 		},
+	-- 		{
+	-- 			"r",
+	-- 			mode = "o",
+	-- 			function()
+	-- 				require("flash").remote()
+	-- 			end,
+	-- 			desc = "Remote Flash",
+	-- 		},
+	-- 		{
+	-- 			"R",
+	-- 			mode = { "n", "x" },
+	-- 			function()
+	-- 				require("flash").treesitter_search()
+	-- 			end,
+	-- 			desc = "Flash TS Search",
+	-- 		},
+	-- 	},
+	-- },
 }
