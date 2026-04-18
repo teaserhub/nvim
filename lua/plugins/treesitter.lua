@@ -1,73 +1,68 @@
--- ~/.config/nvim/lua/plugins/treesitter.lua
 return {
-	-- 1️⃣ Treesitter: подсветка синтаксиса на основе AST
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate", -- компилирует парсеры при установке/обновлении
-		event = { "BufReadPost", "BufNewFile" },
+		build = ":TSUpdate",
+		version = "*", -- 🔥 фиксируем стабильную версию
+		lazy = false,
+
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter-textobjects",
+		},
+
 		config = function()
-			require("nvim-treesitter.config").setup({
+			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
-					-- 🎯 Твой стек
 					"go",
-					"c",
-					"cpp",
-					"rust",
+					"gomod",
 					"lua",
-					"javascript",
-					"typescript",
-					"html",
-					"css",
-					"json",
 					"bash",
-					"markdown",
-					"vim",
-					"vimdoc",
+					"json",
+					"yaml",
+					"toml",
 				},
-				highlight = { enable = true },
-				indent = { enable = true }, -- умные отступы по синтаксису
+
+				highlight = {
+					enable = true,
+				},
+
+				indent = {
+					enable = true,
+				},
+
 				incremental_selection = {
 					enable = true,
 					keymaps = {
-						init_selection = "<C-Space>", -- начать выделение
-						node_incremental = "<C-Space>", -- расширить выделение
-						node_decremental = "<BS>", -- сузить выделение
+						init_selection = "<C-Space>",
+						node_incremental = "<C-Space>",
+						node_decremental = "<BS>",
 					},
 				},
-				-- Авто-пары отключены здесь, чтобы не конфликтовать с mini.pairs
-				autopairs = { enable = false },
-			})
-		end,
-	},
 
-	-- 2️⃣ Визуальные отступы (вертикальные линии как в VS Code)
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		main = "ibl",
-		opts = {
-			indent = {
-				char = "│",
-				tab_char = "│",
-			},
-			scope = { enabled = true },
-			-- ✅ v3 API: исключение по типам файлов
-			exclude = {
-				filetypes = { "oil", "terminal", "help", "lazy", "mason", "fzf" },
-			},
-		},
-	},
+				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true,
+						keymaps = {
+							["af"] = "@function.outer",
+							["if"] = "@function.inner",
+							["ac"] = "@class.outer",
+							["ic"] = "@class.inner",
+							["aa"] = "@parameter.outer",
+							["ia"] = "@parameter.inner",
+						},
+					},
 
-	-- 3️⃣ Умные авто-скобки/кавычки (лёгкий и быстрый)
-	{
-		"echasnovski/mini.pairs",
-		event = "VeryLazy",
-		config = function()
-			require("mini.pairs").setup({
-				modes = { insert = true, command = true },
-				skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-				skip_ts = { "string" },
-				skip_unbalanced = true,
+					move = {
+						enable = true,
+						set_jumps = true,
+						goto_next_start = {
+							["]f"] = "@function.outer",
+						},
+						goto_previous_start = {
+							["[f"] = "@function.outer",
+						},
+					},
+				},
 			})
 		end,
 	},
