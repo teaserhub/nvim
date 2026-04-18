@@ -66,4 +66,34 @@ return {
 			})
 		end,
 	},
+	-- 2️⃣ Визуальные отступы (вертикальные линии как в VS Code)
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		main = "ibl",
+		opts = {
+			indent = {
+				char = "│",
+				tab_char = "│",
+			},
+			scope = { enabled = true },
+			-- ✅ v3 API: исключение по типам файлов
+			exclude = {
+				filetypes = { "oil", "terminal", "help", "lazy", "mason", "fzf" },
+			},
+		},
+	},
+	-- 3️⃣ Умные авто-скобки/кавычки (лёгкий и быстрый)
+	{
+		"echasnovski/mini.pairs",
+		event = "VeryLazy",
+		config = function()
+			require("mini.pairs").setup({
+				modes = { insert = true, command = true },
+				skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+				skip_ts = { "string" },
+				skip_unbalanced = true,
+			})
+		end,
+	},
 }
