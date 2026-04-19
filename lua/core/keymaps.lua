@@ -13,7 +13,19 @@ map('i', 'jj', '<Esc>')
 map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>q", "<cmd>q<cr>")
 
-
+-- Buffer context
+map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
+map("n", "<S-Tab>", ":bprevious<CR>", { desc = "Previous buffer" })
+map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close current buffer" })
+map("n", "<leader>bD", function()
+    local cur = vim.api.nvim_get_current_buf()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= cur and vim.bo[buf].buflisted then
+            pcall(vim.cmd, "bd " .. buf)
+        end
+    end
+end, { desc = "Close all except current" })
+map("n", "<leader>bo", "<C-w>o", { desc = "Close other splits" })
 
 -- Навигация между сплитами как в терминале (tmux-like)
 map("n", "<C-h>", "<C-w>h", opts)
