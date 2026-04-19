@@ -41,29 +41,31 @@ return {
     },
 
     -- 2. Diffview (сравнение веток/коммитов) — у тебя уже есть
-    -- {
-    --     "sindrets/diffview.nvim",
-    --     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
-    --     keys = {
-    --         { "<leader>gv", "<cmd>DiffviewOpen<CR>", desc = "Diffview (current)" },
-    --         { "<leader>gV", "<cmd>DiffviewFileHistory %<CR>", desc = "File History" },
-    --         { "<leader>gl", "<cmd>DiffviewFileHistory --range=HEAD~20..<CR>", desc = "Last 20 Commits" },
-    --     },
-    --     opts = {
-    --         enhanced_diff_hl = true,
-    --         view = {
-    --             default = { layout = "diff2_horizontal" },
-    --             file_history = { layout = "diff2_horizontal" },
-    --         },
-    --         hooks = {
-    --             diff_buf_win_enter = function()
-    --                 vim.opt_local.wrap = false
-    --                 vim.opt_local.number = true
-    --                 vim.opt_local.relativenumber = true
-    --             end,
-    --         },
-    --     },
-    -- },
+{
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+        { "<leader>gv", "<cmd>DiffviewOpen<CR>", desc = "Diffview (current)" },
+        { "<leader>gV", "<cmd>DiffviewFileHistory %<CR>", desc = "File History" },
+        { "<leader>gl", "<cmd>DiffviewFileHistory --range=HEAD~20..<CR>", desc = "Last 20 Commits" },
+    },
+    opts = {
+        enhanced_diff_hl = true,
+        view = {
+            default = { layout = "diff2_horizontal" },
+            file_history = { layout = "diff2_horizontal" },
+        },
+        hooks = {
+            diff_buf_win_enter = function()
+                vim.opt_local.wrap = false
+                vim.opt_local.number = true
+                vim.opt_local.relativenumber = true
+                -- q работает в любом окне
+                vim.keymap.set("n", "q", "<cmd>DiffviewClose<CR>", { buffer = true, desc = "Close Diffview" })
+            end,
+        },
+    },
+},
 
     -- 3. Fugitive (Git-команды)
     {

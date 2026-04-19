@@ -36,7 +36,7 @@ map("n", "<C-l>", "<C-w>l", opts)
 -- Удалить встроенный K (man)
 map("n", "K", "<Nop>", { silent = true })
 
-
+map("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Close Diffview" })
 -- =============================================================================
 --  Пользовательские хоткеи (после lazy)
 -- =============================================================================
@@ -85,4 +85,4 @@ map("i", "<C-s>", "<cmd>w<cr>", { desc = "Сохранить файл" })
 map("n", "<C-f>", "<cmd>FzfLua files<cr>", { desc = "Поиск файлов" })
 
 -- 🔹 Ctrl+H: Заменить (открывает fzf live_grep)
-map("n", "<C-h>", "<cmd>FzfLua live_grep<cr>", { desc = "Поиск по тексту" })
+map("n", "<C-g>", "<cmd>FzfLua live_grep<cr>", { desc = "Поиск по тексту" })
