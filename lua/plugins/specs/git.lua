@@ -82,28 +82,28 @@ return {
     },
 
     -- 4. Flog (граф коммитов)
-    {
-        "rbong/vim-flog",
-        cmd = { "Flog", "Flogsplit", "Floggit" },
-        dependencies = { "tpope/vim-fugitive" },
-        keys = {
-            { "<leader>gL", "<cmd>Flog<CR>", desc = "Git log (graph)" },
-            { "<leader>gS", "<cmd>Flogsplit<CR>", desc = "Git log (split)" },
-        },
-        config = function()
-            vim.g.flog_default_arguments = {
-                max_count = 100,
-                date = "relative",
-                graph = true,
-            }
-            
-            -- Закрыть Flog по q
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "floggraph",
-                callback = function()
-                    vim.keymap.set("n", "q", "<cmd>q<CR>", { buffer = true })
-                end,
-            })
-        end,
-    },
+    -- {
+    --     "rbong/vim-flog",
+    --     cmd = { "Flog", "Flogsplit", "Floggit" },
+    --     dependencies = { "tpope/vim-fugitive" },
+    --     keys = {
+    --         { "<leader>gL", "<cmd>Flog<CR>", desc = "Git log (graph)" },
+    --         { "<leader>gS", "<cmd>Flogsplit<CR>", desc = "Git log (split)" },
+    --     },
+    --     config = function()
+    --         vim.g.flog_default_arguments = {
+    --             max_count = 100,
+    --             date = "relative",
+    --             graph = true,
+    --         }
+    --
+    --         -- Закрыть Flog по q
+    --         vim.api.nvim_create_autocmd("FileType", {
+    --             pattern = "floggraph",
+    --             callback = function()
+    --                 vim.keymap.set("n", "q", "<cmd>q<CR>", { buffer = true })
+    --             end,
+    --         })
+    --     end,
+    -- },
 }
