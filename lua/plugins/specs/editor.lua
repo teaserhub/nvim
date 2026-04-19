@@ -58,17 +58,17 @@ return {
             })
         end,
     },
-
-        {
-        "SmiteshP/nvim-navic",
-        dependencies = { "neovim/nvim-lspconfig" },
-        event = "LspAttach",
-        opts = {
-            highlight = true,
-            separator = " > ",
-            depth_limit = 5,
-            lazy_update_context = true,
-        },
+        --
+        -- {
+        -- "SmiteshP/nvim-navic",
+        -- dependencies = { "neovim/nvim-lspconfig" },
+        -- event = "LspAttach",
+        -- opts = {
+        --     highlight = true,
+        --     separator = " > ",
+        --     depth_limit = 5,
+        --     lazy_update_context = true,
+        -- },
     },
     
 
