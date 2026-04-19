@@ -13,10 +13,7 @@ map('i', 'jj', '<Esc>')
 map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>q", "<cmd>q<cr>")
 
--- Buffer context
-map("n", "<Tab>", ":bnext<CR>")
-map("n", "<S-Tab>", ":bprevious<CR>")
-map("n", "<leader>bd", "<cmd>bdelete<cr>")
+
 
 -- Навигация между сплитами как в терминале (tmux-like)
 map("n", "<C-h>", "<C-w>h", opts)
