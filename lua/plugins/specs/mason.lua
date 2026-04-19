@@ -34,7 +34,7 @@ return {
     -- Мост для lspconfig
     {
         "williamboman/mason-lspconfig.nvim",
-        event = "BufReadPre *.go",
+        event = "BufReadPre",
         dependencies = { "williamboman/mason.nvim" },
         config = function()
             require("mason-lspconfig").setup({

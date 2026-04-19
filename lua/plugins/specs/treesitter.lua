@@ -1,6 +1,7 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
+        event = "BufReadPre",
         lazy = false,
         build = ":TSUpdate",
         -- dependencies = {
