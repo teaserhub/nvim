@@ -55,6 +55,13 @@ save_timer:start(0, 3000, vim.schedule_wrap(function()
     end)
 end))
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.lsp.enable("gopls")
+  end,
+})
+
 -- -- Вместо автокоманды для Go
 -- vim.api.nvim_create_autocmd("FileType", {
 --     pattern = "*",
