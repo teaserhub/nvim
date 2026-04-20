@@ -17,10 +17,13 @@ return {
 
     {
         "williamboman/mason-lspconfig.nvim",
-        dependencies = { "williamboman/mason.nvim" },
-        event = "LspAttach",
+        event = "LspAttach", -- ✅ Грузить только когда подключается LSP
         opts = {
             ensure_installed = { "gopls", "ts_ls", "html", "cssls" },
+            -- Если нужно передать настройки в mason, используй:
+            -- config = function(_, opts)
+            --     require("mason-lspconfig").setup(opts)
+            -- end
         },
     },
     -- ═══════════════════════════ NVIM-LINT ═══════════════════════
@@ -29,7 +32,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         config = function()
             local lint = require("lint")
-            
+
             -- 🎯 Привязка линтеров к типам файлов
             lint.linters_by_ft = {
                 go         = { "golangci_lint" },
@@ -52,19 +55,17 @@ return {
         "saghen/blink.cmp",
         version = "1.*",
         event = "InsertEnter",
-        dependencies = {
-            -- "rafamadriz/friendly-snippets"
-        },
+        dependencies = {},
         opts = {
             keymap = { preset = "super-tab" },
             appearance = {
-                -- use_nvim_cmp_as_default = true,
                 nerd_font_variant = "mono",
             },
             sources = {
                 default = { "lsp", "path", "snippets", "buffer" },
             },
             completion = {
+                trigger = { min_length = 2 },
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 300,
@@ -75,6 +76,10 @@ return {
                     selection = { preselect = false, auto_insert = false },
                 },
                 menu = { border = "rounded" },
+                accept = {
+                    auto_brackets = { enabled = false }, -- ✅ Без конфликта с mini.pairs
+                    create_undo_point = true,
+                },
             },
             signature = {
                 enabled = true,
