@@ -7,8 +7,7 @@ return {
     -- ═══════════════════════════ MASON ═══════════════════════════
     {
         "williamboman/mason.nvim",
-        build = ":MasonUpdate",
-        event = { "BufReadPre", "BufNewFile" },
+        cmd = "Mason", -- Грузить привызове
         config = function()
             require("mason").setup({
                 ui = { border = "rounded" },
@@ -132,24 +131,24 @@ return {
                     end
 
                     -- Навигация
-                    map("n", "gd", vim.lsp.buf.definition,      "Goto Definition")
-                    map("n", "gD", vim.lsp.buf.declaration,     "Goto Declaration")
-                    map("n", "gi", vim.lsp.buf.implementation,  "Goto Implementation")
+                    map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
+                    map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
+                    map("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
                     map("n", "gy", vim.lsp.buf.type_definition, "Goto Type Definition")
-                    map("n", "gr", vim.lsp.buf.references,      "References")
+                    map("n", "gr", vim.lsp.buf.references, "References")
 
                     -- Информация
-                    map("n", "K",    vim.lsp.buf.hover,          "Hover")
+                    map("n", "K", vim.lsp.buf.hover, "Hover")
                     map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
 
                     -- Действия
                     map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
                     map("v", "<leader>ca", vim.lsp.buf.code_action, "Code Action (visual)")
-                    map("n", "<leader>rn", vim.lsp.buf.rename,      "Rename")
+                    map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
 
                     -- Диагностика
-                    map("n", "[d",        vim.diagnostic.goto_prev,  "Prev Diagnostic")
-                    map("n", "]d",        vim.diagnostic.goto_next,  "Next Diagnostic")
+                    map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
+                    map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
                     map("n", "<leader>d", vim.diagnostic.open_float, "Line Diagnostics")
                     map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostic List")
 
