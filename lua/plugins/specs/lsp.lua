@@ -18,7 +18,7 @@ return {
     {
         "williamboman/mason-lspconfig.nvim",
         dependencies = { "williamboman/mason.nvim" },
-        event = { "BufReadPre", "BufNewFile" },
+        event = "LspAttach",
         opts = {
             ensure_installed = { "gopls", "ts_ls", "html", "cssls" },
         },
