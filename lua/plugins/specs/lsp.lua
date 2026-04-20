@@ -29,11 +29,13 @@ return {
         "saghen/blink.cmp",
         version = "1.*",
         event = "InsertEnter",
-        dependencies = { "rafamadriz/friendly-snippets" },
+        dependencies = {
+            -- "rafamadriz/friendly-snippets"
+        },
         opts = {
             keymap = { preset = "super-tab" },
             appearance = {
-                use_nvim_cmp_as_default = true,
+                -- use_nvim_cmp_as_default = true,
                 nerd_font_variant = "mono",
             },
             sources = {
@@ -111,7 +113,7 @@ return {
                 vim.lsp.buf.format({
                     bufnr      = bufnr,
                     async      = false,
-                    timeout_ms = 2000,
+                    timeout_ms = 3000,
                     filter     = function(client)
                         return formatter == nil or client.name == formatter
                     end,
@@ -204,6 +206,12 @@ return {
                             parameterNames         = true,
                             rangeVariableTypes     = true,
                         },
+                        -- ✅ Оптимизации для больших проектов
+                        codelenses = {
+                            generate = true,
+                            gc_details = false,
+                        },
+
                     },
                 },
             })
