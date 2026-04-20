@@ -7,6 +7,7 @@ return {
         opts = {
             statuscolumn = {
                 enabled = true,
+                max_signs = 5,
                 -- Показывать Git-знаки
                 git = {
                     enabled = true,
