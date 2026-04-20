@@ -22,7 +22,6 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         opts = {
             ensure_installed = { "gopls", "ts_ls", "html", "cssls" },
-            automatic_installation = false,
         },
     },
 
@@ -57,7 +56,7 @@ return {
                 enabled = true,
                 window = { border = "rounded" },
             },
-            fuzzy = { implementation = "lua" },
+            fuzzy = { implementation = "prefer_rust" },
         },
     },
 
@@ -93,14 +92,11 @@ return {
                 },
             })
 
-            -- ── Inlay hints глобально ─────────────────────────────────
-            vim.lsp.inlay_hint.enable(true)
-
             -- ── Capabilities ─────────────────────────────────────────
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             vim.lsp.config("*", { capabilities = capabilities })
 
-            -- ── Форматтеры: кто за какой тип файлов отвечает ─────────
+            -- ── Форматтеры ────────────────────────────────────────────
             local format_filter = {
                 go         = "gopls",
                 typescript = "ts_ls",
@@ -123,7 +119,7 @@ return {
                 })
             end
 
-            -- ── LspAttach: клавиши + автоформат ──────────────────────
+            -- ── LspAttach ─────────────────────────────────────────────
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
                 callback = function(args)
@@ -136,34 +132,38 @@ return {
                     end
 
                     -- Навигация
-                    map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
-                    map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-                    map("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
+                    map("n", "gd", vim.lsp.buf.definition,      "Goto Definition")
+                    map("n", "gD", vim.lsp.buf.declaration,     "Goto Declaration")
+                    map("n", "gi", vim.lsp.buf.implementation,  "Goto Implementation")
                     map("n", "gy", vim.lsp.buf.type_definition, "Goto Type Definition")
-                    map("n", "gr", vim.lsp.buf.references, "References")
+                    map("n", "gr", vim.lsp.buf.references,      "References")
 
                     -- Информация
-                    map("n", "K", vim.lsp.buf.hover, "Hover")
+                    map("n", "K",    vim.lsp.buf.hover,          "Hover")
                     map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
 
                     -- Действия
                     map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
                     map("v", "<leader>ca", vim.lsp.buf.code_action, "Code Action (visual)")
-                    map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
+                    map("n", "<leader>rn", vim.lsp.buf.rename,      "Rename")
 
                     -- Диагностика
-                    map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
-                    map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+                    map("n", "[d",        vim.diagnostic.goto_prev,  "Prev Diagnostic")
+                    map("n", "]d",        vim.diagnostic.goto_next,  "Next Diagnostic")
                     map("n", "<leader>d", vim.diagnostic.open_float, "Line Diagnostics")
                     map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostic List")
 
-                    -- Inlay hints toggle
-                    map("n", "<leader>ih", function()
-                        vim.lsp.inlay_hint.enable(
-                            not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
-                            { bufnr = bufnr }
-                        )
-                    end, "Toggle Inlay Hints")
+                    -- Inlay hints: включаем только если сервер поддерживает
+                    if client:supports_method("textDocument/inlayHint") then
+                        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
+                        map("n", "<leader>ih", function()
+                            vim.lsp.inlay_hint.enable(
+                                not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+                                { bufnr = bufnr }
+                            )
+                        end, "Toggle Inlay Hints")
+                    end
 
                     -- Автоформат при сохранении
                     if client:supports_method("textDocument/formatting") then
@@ -179,17 +179,15 @@ return {
                 end,
             })
 
-            -- ── LspDetach: чистим за собой ────────────────────────────
+            -- ── LspDetach ─────────────────────────────────────────────
             vim.api.nvim_create_autocmd("LspDetach", {
                 group = vim.api.nvim_create_augroup("UserLspDetach", { clear = true }),
                 callback = function(args)
-                    vim.lsp.buf.clear_references()
                     pcall(vim.api.nvim_del_augroup_by_name, "UserLspFormat_" .. args.buf)
                 end,
             })
 
-            -- ── Конфиги серверов ─────────────────────────────────────
-
+            -- ── Конфиги серверов ──────────────────────────────────────
             vim.lsp.config("gopls", {
                 settings = {
                     gopls = {
@@ -212,6 +210,7 @@ return {
             })
 
             vim.lsp.config("ts_ls", {
+                single_file_support = true,
                 init_options = {
                     preferences = {
                         disableSuggestions                 = false,
@@ -239,12 +238,7 @@ return {
             vim.lsp.config("html", {})
             vim.lsp.config("cssls", {})
 
-            -- ── Включаем серверы ──────────────────────────────────────
-            -- vim.schedule откладывает до следующего event loop tick —
-            -- mason гарантированно успевает инициализироваться
-            vim.schedule(function()
-                vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls" })
-            end)
+            vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls" })
         end,
     },
 }
