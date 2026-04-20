@@ -1,0 +1,328 @@
+-- plugins/specs/heirline.lua
+return {
+    {
+        "rebelot/heirline.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+            "lewis6991/gitsigns.nvim",  -- для Git-статуса
+        },
+        config = function()
+            local heirline = require("heirline")
+            local conditions = require("heirline.conditions")
+            local utils = require("heirline.utils")
+            
+            -- Цвета из текущей темы (onedark)
+            local colors = {
+                bg = utils.get_highlight("Normal").bg or "#282c34",
+                fg = utils.get_highlight("Normal").fg or "#abb2bf",
+                red = utils.get_highlight("DiagnosticError").fg or "#e06c75",
+                green = utils.get_highlight("DiagnosticOk").fg or "#98c379",
+                yellow = utils.get_highlight("DiagnosticWarn").fg or "#e5c07b",
+                blue = utils.get_highlight("DiagnosticInfo").fg or "#61afef",
+                purple = "#c678dd",
+                cyan = "#56b6c2",
+                gray = "#5c6370",
+            }
+            
+            -- =========================================================
+            --  Компоненты статуслайна
+            -- =========================================================
+            
+            -- Режим (NORMAL, INSERT, VISUAL)
+            local Mode = {
+                init = function(self)
+                    self.mode = vim.fn.mode(1)
+                end,
+                static = {
+                    mode_names = {
+                        n = "N",
+                        no = "N·O",
+                        nov = "N·O",
+                        noV = "N·O",
+                        ["no\22"] = "N·O",
+                        niI = "N·I",
+                        niR = "N·R",
+                        niV = "N·V",
+                        i = "I",
+                        ic = "I",
+                        ix = "I",
+                        R = "R",
+                        Rc = "R",
+                        Rx = "R",
+                        Rv = "R·V",
+                        Rvc = "R·V",
+                        Rvx = "R·V",
+                        c = "C",
+                        cv = "C·V",
+                        ce = "C·E",
+                        r = "R",
+                        rm = "R·M",
+                        ["r?"] = "R·?",
+                        ["!"] = "!",
+                        t = "T",
+                        v = "V",
+                        V = "V·L",
+                        ["\22"] = "V·B",
+                        s = "S",
+                        S = "S·L",
+                        ["\19"] = "S·B",
+                    },
+                    mode_colors = {
+                        n = colors.blue,
+                        i = colors.green,
+                        v = colors.purple,
+                        V = colors.purple,
+                        ["\22"] = colors.purple,
+                        c = colors.yellow,
+                        s = colors.cyan,
+                        S = colors.cyan,
+                        ["\19"] = colors.cyan,
+                        R = colors.red,
+                        r = colors.red,
+                        ["!"] = colors.red,
+                        t = colors.gray,
+                    },
+                },
+                provider = function(self)
+                    return " " .. (self.mode_names[self.mode] or self.mode) .. " "
+                end,
+                hl = function(self)
+                    return {
+                        bg = self.mode_colors[self.mode] or colors.blue,
+                        fg = colors.bg,
+                        bold = true,
+                    }
+                end,
+            }
+            
+            -- Git-ветка
+            local GitBranch = {
+                condition = conditions.is_git_repo,
+                init = function(self)
+                    self.branch = vim.b.gitsigns_head or ""
+                end,
+                provider = function(self)
+                    return " 󰘬 " .. self.branch .. " "
+                end,
+                hl = { fg = colors.yellow, bold = true },
+            }
+            
+            -- Git-изменения (через gitsigns)
+            local GitChanges = {
+                condition = conditions.is_git_repo,
+                init = function(self)
+                    self.status = vim.b.gitsigns_status_dict or {}
+                end,
+                provider = function(self)
+                    local parts = {}
+                    if self.status.added and self.status.added > 0 then
+                        table.insert(parts, " " .. self.status.added)
+                    end
+                    if self.status.changed and self.status.changed > 0 then
+                        table.insert(parts, " " .. self.status.changed)
+                    end
+                    if self.status.removed and self.status.removed > 0 then
+                        table.insert(parts, " " .. self.status.removed)
+                    end
+                    return #parts > 0 and " " .. table.concat(parts, " ") .. " " or ""
+                end,
+                hl = { fg = colors.gray },
+            }
+            
+            -- Имя файла
+            local FileName = {
+                provider = function()
+                    return " " .. vim.fn.expand("%:t") .. " "
+                end,
+                hl = { fg = colors.fg, bold = true },
+            }
+            
+            -- Статус изменённости файла
+            local FileModified = {
+                provider = function()
+                    return vim.bo.modified and " ●" or ""
+                end,
+                hl = { fg = colors.yellow },
+            }
+            
+            -- Диагностика (ошибки, предупреждения)
+            local Diagnostics = {
+                condition = conditions.has_diagnostics,
+                static = {
+                    signs = {
+                        [vim.diagnostic.severity.ERROR] = "󰅚",
+                        [vim.diagnostic.severity.WARN]  = "󰀪",
+                        [vim.diagnostic.severity.INFO]  = "󰌵",
+                        [vim.diagnostic.severity.HINT]  = "󰌶",
+                    },
+                },
+                init = function(self)
+                    self.counts = vim.diagnostic.count(0)
+                end,
+                provider = function(self)
+                    local parts = {}
+                    for sev, icon in pairs(self.signs) do
+                        local count = self.counts[sev] or 0
+                        if count > 0 then
+                            table.insert(parts, icon .. " " .. count)
+                        end
+                    end
+                    return #parts > 0 and " " .. table.concat(parts, " ") .. " " or ""
+                end,
+                hl = { fg = colors.red },
+            }
+            
+            -- LSP-клиенты
+            local LspClients = {
+                condition = conditions.lsp_attached,
+                init = function(self)
+                    local clients = vim.lsp.get_clients({ bufnr = 0 })
+                    local names = {}
+                    for _, c in ipairs(clients) do
+                        table.insert(names, c.name)
+                    end
+                    self.names = vim.fn.uniq(names)
+                end,
+                provider = function(self)
+                    return " 󰒋 " .. table.concat(self.names, ",") .. " "
+                end,
+                hl = { fg = colors.cyan },
+            }
+            
+            -- Тип файла
+            local FileType = {
+                provider = function()
+                    return " " .. vim.bo.filetype:upper() .. " "
+                end,
+                hl = { fg = colors.blue, bold = true },
+            }
+            
+            -- Позиция курсора
+            local Location = {
+                provider = function()
+                    local line = vim.fn.line(".")
+                    local col = vim.fn.col(".")
+                    local total = vim.fn.line("$")
+                    local percent = math.floor((line / total) * 100)
+                    return string.format(" %d%% %d:%d ", percent, line, col)
+                end,
+                hl = { fg = colors.gray },
+            }
+            
+            -- Прогресс в файле
+            local Progress = {
+                provider = function()
+                    local line = vim.fn.line(".")
+                    local total = vim.fn.line("$")
+                    return string.format(" %d/%d ", line, total)
+                end,
+                hl = { fg = colors.gray },
+            }
+            
+            -- Макрос (запись)
+            local MacroRecording = {
+                condition = function()
+                    return vim.fn.reg_recording() ~= ""
+                end,
+                provider = function()
+                    return " 󰑋 @" .. vim.fn.reg_recording() .. " "
+                end,
+                hl = { fg = colors.red, bold = true },
+            }
+            
+            -- Время
+            local Time = {
+                provider = function()
+                    return " 󰥔 " .. os.date("%H:%M") .. " "
+                end,
+                hl = { fg = colors.fg },
+            }
+            
+            -- Разделитель
+            local Spacer = {
+                provider = "%=",
+            }
+            
+            -- Пустое пространство
+            local Space = {
+                provider = " ",
+            }
+            
+            -- =========================================================
+            --  Сборка статуслайна
+            -- =========================================================
+            
+            local StatusLine = {
+                -- Левая часть
+                Mode,
+                Space,
+                GitBranch,
+                GitChanges,
+                Space,
+                FileName,
+                FileModified,
+                Space,
+                Diagnostics,
+                
+                Spacer,
+                
+                -- Правая часть
+                MacroRecording,
+                LspClients,
+                FileType,
+                Progress,
+                Location,
+                Time,
+            }
+            
+            -- =========================================================
+            --  Winbar (хлебные крошки)
+            -- =========================================================
+            
+            local WinBar = {
+                condition = function()
+                    return conditions.buffer_matches({ filetype = { "go", "lua", "typescript" } })
+                        and conditions.lsp_attached
+                end,
+                init = function(self)
+                    self.bufnr = vim.api.nvim_get_current_buf()
+                end,
+                provider = function(self)
+                    -- Показываем текущую функцию (упрощённо)
+                    local clients = vim.lsp.get_clients({ bufnr = self.bufnr })
+                    if #clients == 0 then return "" end
+                    
+                    -- Можно добавить navic для полных хлебных крошек
+                    return " 󰉆 " .. vim.fn.expand("%:.") .. " "
+                end,
+                hl = { fg = colors.gray, bg = colors.bg },
+            }
+            
+            -- =========================================================
+            --  Инициализация
+            -- =========================================================
+            
+            heirline.setup({
+                statusline = StatusLine,
+                winbar = WinBar,
+                opts = {
+                    colors = colors,
+                    disable_winbar_cb = function(args)
+                        return not conditions.buffer_matches({
+                            filetype = { "go", "lua", "typescript" },
+                        })(args)
+                    end,
+                },
+            })
+            
+            -- Автообновление при изменении Git
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "GitSignsUpdate",
+                callback = function()
+                    vim.cmd("redrawstatus")
+                end,
+            })
+        end,
+    },
+}
