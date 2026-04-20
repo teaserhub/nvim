@@ -10,18 +10,18 @@ return {
     --             char = "│",
     --             tab_char = "│",
     --         },
-    --         scope = { 
+    --         scope = {
     --             enabled = true,
     --             show_start = false,
     --             show_end = false,
     --         },
     --         exclude = {
-    --             filetypes = { 
-    --                 "oil", 
-    --                 "terminal", 
-    --                 "help", 
-    --                 "lazy", 
-    --                 "mason", 
+    --             filetypes = {
+    --                 "oil",
+    --                 "terminal",
+    --                 "help",
+    --                 "lazy",
+    --                 "mason",
     --                 "fzf",
     --                 "Trouble",
     --                 "dashboard",
@@ -30,46 +30,37 @@ return {
     --         },
     --     },
     -- },
-    
+
     -- Автопары
     {
         "echasnovski/mini.pairs",
         event = "InsertEnter",
         config = function()
             require("mini.pairs").setup({
-                modes = { 
-                    insert = true, 
-                    command = true,
-                    terminal = false,
-                },
-                -- Пропускать автопары в определённых контекстах
+                modes = { insert = true, command = true, terminal = false },
                 skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-                skip_ts = { "string", "comment" },  -- пропускать в строках и комментариях
+                skip_ts = { "string", "comment" },
+                -- Добавить в setup(), если нужно отключать автопары в определённых типах файлов:
+                skip_ft = { "gitcommit", "markdown", "help", "log" },
                 skip_unbalanced = true,
-                
-                -- Дополнительные пары для Go
                 mappings = {
-                    ["`"] = { 
-                        action = "open", 
-                        pair = "``", 
-                        neigh_pattern = "[^\\]`" 
-                    },
+                    ["`"] = { action = "open", pair = "``", neigh_pattern = "[^\\]`" },
                 },
             })
         end,
     },
-        --
-        -- {
-        -- "SmiteshP/nvim-navic",
-        -- dependencies = { "neovim/nvim-lspconfig" },
-        -- event = "LspAttach",
-        -- opts = {
-        --     highlight = true,
-        --     separator = " > ",
-        --     depth_limit = 5,
-        --     lazy_update_context = true,
-        -- },
+    --
+    -- {
+    -- "SmiteshP/nvim-navic",
+    -- dependencies = { "neovim/nvim-lspconfig" },
+    -- event = "LspAttach",
+    -- opts = {
+    --     highlight = true,
+    --     separator = " > ",
+    --     depth_limit = 5,
+    --     lazy_update_context = true,
     -- },
-    
+    -- },
+
 
 }
