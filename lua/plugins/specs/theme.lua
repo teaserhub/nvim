@@ -14,7 +14,7 @@ return {
         lazy = false,    -- загрузить сразу, не ждать событий
         config = function()
             require("onedark").setup({
-                style = "dark",         -- 🎨 "dark" | "darker" | "cool" | "deep" | "warm" | "warmer"
+                style = "darker",       -- 🎨 "dark" | "darker" | "cool" | "deep" | "warm" | "warmer"
                 transparent = false,    -- true = прозрачный фон
                 terminal_colors = true, -- синхронизация цветов с :terminal
                 diagnostics = {
