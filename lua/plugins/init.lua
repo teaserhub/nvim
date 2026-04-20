@@ -15,51 +15,37 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins.specs", {
     defaults = { lazy = true },
     
-    -- 🔄 Авто-перезагрузка
+    -- 🔄 Авто-установка и проверка обновлений
+    install = { missing = true },
+    checker = { enabled = true, notify = false },
+    
+    -- 🔄 Авто-перезагрузка конфигов
     change_detection = {
         enabled = true,
         notify = false,
     },
     
-    -- 🎨 Красивый UI
+    -- 🎨 UI
     ui = {
         border = "rounded",
         backdrop = 100,
     },
     
-    -- 🎯 Иконки для разных типов плагинов
-icons = {
-    cmd = "[C]",
-    config = "[*]",
-    event = "[E]",
-    ft = "[F]",
-    init = "[I]",
-    keys = "[K]",
-    plugin = "[P]",
-    runtime = "[R]",
-    source = "[S]",
-    start = "[>]",
-    task = "[T]",
-    lazy = "[L]",
-    loaded = "[+]",
-    not_loaded = "[-]",
-},
+    -- 🎯 Иконки
+    icons = {
+        cmd = "[C]", config = "[*]", event = "[E]", ft = "[F]",
+        init = "[I]", keys = "[K]", plugin = "[P]", runtime = "[R]",
+        source = "[S]", start = "[>]", task = "[T]", lazy = "[L]",
+        loaded = "[+]", not_loaded = "[-]",
+    },
     
     -- ⚡ Производительность
     performance = {
-        cache = {
-            enabled = true,
-        },
+        cache = { enabled = true },
         rtp = {
             disabled_plugins = {
-                "gzip",
-                "matchit",
-                "matchparen",
-                "netrwPlugin",
-                "tarPlugin",
-                "tohtml",
-                "tutor",
-                "zipPlugin",
+                "gzip", "matchit", "matchparen", "netrwPlugin",
+                "tarPlugin", "tohtml", "tutor", "zipPlugin",
             },
         },
     },
