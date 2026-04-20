@@ -4,11 +4,11 @@
 return {
     -- ═══════════════════════════ MASON ═══════════════════════════
     {
-        "mason-org/mason.nvim",          -- ← официальный репозиторий 2026
+        "mason-org/mason.nvim", -- ← официальный репозиторий 2026
         cmd = "Mason",
         opts = {
             ui = { border = "rounded" },
-            max_concurrent_installers = 4,   -- официальная рекомендация
+            max_concurrent_installers = 4, -- официальная рекомендация
         },
         config = function(_, opts)
             require("mason").setup(opts)
@@ -41,7 +41,8 @@ return {
             local lint = require("lint")
 
             lint.linters_by_ft = {
-                go = { "golangci-lint" },
+                go = { "golangcilint" },
+                go = { "golangcilint" },
                 javascript = { "eslint_d" },
                 typescript = { "eslint_d" },
                 javascriptreact = { "eslint_d" },
@@ -73,7 +74,7 @@ return {
 
             appearance = {
                 nerd_font_variant = "mono",
-                use_nvim_cmp_as_default = true,   -- ← важно для тем 2026
+                use_nvim_cmp_as_default = true, -- ← важно для тем 2026
             },
 
             sources = {
@@ -101,7 +102,7 @@ return {
                     draw = {
                         columns = {
                             { "kind_icon" },
-                            { "label", gap = 1 },
+                            { "label",    gap = 1 },
                             { "kind" },
                         },
                     },
