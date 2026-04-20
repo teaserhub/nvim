@@ -1,5 +1,4 @@
 -- core/keymaps.lua
--- Все клавиши в одном месте (как routes.go в web-сервере)
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
@@ -34,7 +33,7 @@ map("n", "<C-k>", "<C-w>k", opts)
 map("n", "<C-l>", "<C-w>l", opts)
 
 -- Удалить встроенный K (man)
-map("n", "K", "<Nop>", { silent = true })
+-- map("n", "K", "<Nop>", { silent = true })
 
 map("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Close Diffview" })
 -- =============================================================================
@@ -86,3 +85,59 @@ map("n", "<C-f>", "<cmd>FzfLua files<cr>", { desc = "Поиск файлов" })
 
 -- 🔹 Ctrl+H: Заменить (открывает fzf live_grep)
 map("n", "<C-g>", "<cmd>FzfLua live_grep<cr>", { desc = "Поиск по тексту" })
+
+-- ============================================
+-- ЗАМЕНА WHICH-KEY: Просмотр всех маппингов по <Leader>?
+-- ============================================
+local function show_keymaps()
+    local maps = vim.api.nvim_get_keymap("n") -- только normal mode
+    local lines = {}
+
+    for _, map in ipairs(maps) do
+        local lhs = map.lhs
+        local desc = map.desc or ""
+        local rhs = map.rhs or ""
+
+        -- Фильтруем мусор: убираем <Plug> маппинги и пустые
+        if lhs:sub(1, 6) ~= "<Plug>" and lhs ~= "" then
+            -- Форматируем красиво: "Space f f  →  Find Files"
+            local display_lhs = lhs:gsub("<Leader>", "Space ")
+            local display_desc = desc ~= "" and desc or rhs:gsub("<Cmd>", ""):gsub("<CR>", "")
+
+            if display_desc ~= "" then
+                table.insert(lines, string.format("%-20s → %s", display_lhs, display_desc))
+            end
+        end
+    end
+
+    -- Сортируем для читаемости
+    table.sort(lines)
+
+    -- Отправляем в fzf-lua (если он есть)
+    local ok, fzf = pcall(require, "fzf-lua")
+    if ok then
+        fzf.fzf_exec(lines, {
+            prompt = "🗺️  Keymaps (Normal Mode) > ",
+            winopts = { height = 0.5, width = 0.6, row = 0.5, col = 0.5 },
+            actions = {
+                -- При нажатии Enter — выполняем команду (извлекаем оригинальный lhs)
+                default = function(selected)
+                    local lhs = selected[1]:match("^(%S+)"):gsub("Space ", "<Leader>")
+                    vim.cmd("normal! " .. lhs)
+                end
+            }
+        })
+    else
+        -- Fallback: если fzf-lua нет, просто выводим в буфер
+        vim.cmd("new")
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+        vim.bo.buftype = "nofile"
+        vim.bo.modifiable = false
+    end
+end
+
+-- Вешаем на <Leader>?
+vim.keymap.set("n", "<Leader>?", show_keymaps, { desc = "Show all keymaps" })
+
+-- (Опционально) Можно повесить и на команду :Maps
+vim.api.nvim_create_user_command("Maps", show_keymaps, {})
