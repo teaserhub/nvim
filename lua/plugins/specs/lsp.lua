@@ -23,7 +23,30 @@ return {
             ensure_installed = { "gopls", "ts_ls", "html", "cssls" },
         },
     },
+    -- ═══════════════════════════ NVIM-LINT ═══════════════════════
+    {
+        "mfussenegger/nvim-lint",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            local lint = require("lint")
+            
+            -- 🎯 Привязка линтеров к типам файлов
+            lint.linters_by_ft = {
+                go         = { "golangci_lint" },
+                javascript = { "eslint_d" },
+                typescript = { "eslint_d" },
+                -- HTML/CSS пропускаем: LSP уже даёт валидацию
+            }
 
+            -- 🔄 Запуск линтинга при сохранении и выходе из режима вставки
+            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+                callback = function()
+                    -- pcall гарантирует, что ошибка линтера не прервёт сохранение
+                    pcall(lint.try_lint)
+                end,
+            })
+        end,
+    },
     -- ══════════════════════════ BLINK.CMP ════════════════════════
     {
         "saghen/blink.cmp",
@@ -192,14 +215,14 @@ return {
             vim.lsp.config("gopls", {
                 settings = {
                     gopls = {
-                        gofumpt         = true,
-                        staticcheck     = true,
-                        usePlaceholders = false,
-                        analyses        = {
+                        gofumpt          = true,
+                        staticcheck      = true,
+                        usePlaceholders  = false,
+                        analyses         = {
                             unusedparams = true,
                             shadow       = true,
                         },
-                        hints           = {
+                        hints            = {
                             assignVariableTypes    = true,
                             compositeLiteralFields = true,
                             functionTypeParameters = true,
@@ -207,11 +230,11 @@ return {
                             rangeVariableTypes     = true,
                         },
                         -- ✅ Оптимизации для больших проектов
-                        codelenses = {
+                        codelenses       = {
                             generate = true,
                             gc_details = false,
                         },
-
+                        directoryFilters = { "-.git", "-vendor", "-node_modules" },
                     },
                 },
             })
