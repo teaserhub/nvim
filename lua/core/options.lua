@@ -58,7 +58,7 @@ opt.clipboard = "unnamedplus" -- системный буфер обмена
 opt.wildmode = "longest:full,full" -- умное автодополнение в cmdline
 
 -- Вместо FileType go
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldenable = true
-vim.opt.foldlevel = 99
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.opt.foldenable = true
+-- vim.opt.foldlevel = 99

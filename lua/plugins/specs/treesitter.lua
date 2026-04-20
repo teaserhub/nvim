@@ -1,68 +1,73 @@
 -- plugins/treesitter.lua
 -- =============================================================
--- nvim-treesitter — продвинутая подсветка, отступы и folding (2026)
+-- nvim-treesitter (post-archive версия — апрель 2026)
 -- =============================================================
 
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        version = "main",           -- важно после архивации репозитория в апреле 2026
-        build = ":TSUpdate",        -- автоматически обновляет парсеры
-        event = "BufReadPre",
-        lazy = false,               -- Treesitter лучше грузить рано
+        lazy = false,                    -- Treesitter должен грузиться рано
+        build = ":TSUpdate",             -- обязательно!
+        dependencies = {
+            -- "nvim-treesitter/nvim-treesitter-textobjects",  -- пока закомментировали, чтобы не ломалось
+        },
         config = function()
             require("nvim-treesitter").setup({
-                -- Какие языки устанавливать автоматически
                 ensure_installed = {
                     "go", "gomod", "gowork", "gosum",
                     "lua", "luadoc",
                     "javascript", "typescript", "tsx",
                     "html", "css", "scss",
                     "json", "markdown", "markdown_inline",
-                    "vim", "vimdoc", "query", -- для помощи по Neovim
+                    "vim", "vimdoc", "query",
                 },
 
-                -- Автоматически устанавливать парсеры для новых языков
                 auto_install = true,
 
-                -- Основные модули
                 highlight = {
-                    enable = true,                    -- продвинутая подсветка (лучше чем в VSCode)
-                    additional_vim_regex_highlighting = false, -- отключаем старый regex (быстрее)
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
                 },
 
                 indent = {
-                    enable = true,                    -- умные отступы
+                    enable = true,
                 },
 
-                -- Incremental selection (выделение блоков кода)
                 incremental_selection = {
                     enable = true,
                     keymaps = {
-                        init_selection = "<C-space>",   -- начать выделение
+                        init_selection = "<C-space>",
                         node_incremental = "<C-space>",
-                        scope_incremental = false,
                         node_decremental = "<bs>",
                     },
                 },
 
-                -- Folding (сворачивание кода) — как в VSCode
-                fold = {
-                    enable = true,
+                -- Text objects (временно упрощённо)
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            ["ic"] = "@class.inner",
+                        },
+                    },
                 },
             })
 
-            -- Глобальные настройки folding на основе Treesitter (рекомендация 2026)
+            -- Folding на основе Treesitter
             vim.wo.foldmethod = "expr"
             vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.wo.foldlevel = 99          -- по умолчанию всё раскрыто
+            vim.wo.foldlevel = 99
             vim.wo.foldenable = true
 
-            -- Автоматически включать Treesitter при открытии файла
+            -- Автозапуск
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "*" },
+                pattern = "*",
                 callback = function()
-                    pcall(vim.treesitter.start)   -- безопасно запускаем
+                    pcall(vim.treesitter.start)
                 end,
             })
         end,
