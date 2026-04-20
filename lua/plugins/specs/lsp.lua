@@ -55,17 +55,24 @@ return {
         "saghen/blink.cmp",
         version = "1.*",
         event = "InsertEnter",
-        dependencies = {},
+        dependencies = {
+            -- "rafamadriz/friendly-snippets", -- ❌ Оставь закомментированным, если не нужны сниппеты
+        },
         opts = {
             keymap = { preset = "super-tab" },
             appearance = {
                 nerd_font_variant = "mono",
             },
             sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
+                -- ✅ Убрал "snippets", так как плагин удален.
+                -- Оставил только LSP, пути и буфер.
+                default = { "lsp", "path", "buffer" },
             },
             completion = {
-                trigger = { min_length = 2 },
+                -- ✅ Явно включаем вызов меню при вводе специальных символов (например, точки .)
+                trigger = {
+                    show_on_trigger_character = true,
+                },
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 300,
@@ -77,7 +84,7 @@ return {
                 },
                 menu = { border = "rounded" },
                 accept = {
-                    auto_brackets = { enabled = false }, -- ✅ Без конфликта с mini.pairs
+                    auto_brackets = { enabled = false }, -- ✅ Отдаём пары mini.pairs
                     create_undo_point = true,
                 },
             },
