@@ -11,6 +11,8 @@
   "mini.comment": { "branch": "main", "commit": "8e5ff3ed3cc0e8f216617aae01020c00c20f7a87" },
   "mini.pairs": { "branch": "main", "commit": "42387c7fe68fc0b6e95eaf37f1bb76e7bffaa0d9" },
   "mini.starter": { "branch": "main", "commit": "7bdc9decc8b623f245c1e42a64bc41e61d574c5e" },
+  "mini.statusline": { "branch": "main", "commit": "14919901649d20d020e659c63c03baa75cd94f33" },
+  "mini.tabline": { "branch": "main", "commit": "caf23615b9b99bacc79ecd60f61c4e6a8ec18c84" },
   "nvim-lint": { "branch": "master", "commit": "eab58b48eb11d7745c11c505e0f3057165902461" },
   "nvim-lspconfig": { "branch": "master", "commit": "e05fb8c3bd61d909dacff24f77f23beb644daf54" },
   "nvim-treesitter": { "branch": "main", "commit": "4916d6592ede8c07973490d9322f187e07dfefac" },

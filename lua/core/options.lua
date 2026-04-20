@@ -12,10 +12,11 @@ opt.scrolloff = 8         -- отступ от края при скролле
 opt.termguicolors = true  -- 24-bit цвета (нужно для onedark)
 opt.laststatus = 3        -- глобальный статуслайн (один на все окна)
 opt.cmdheight = 1         -- высота командной строки
-opt.winbar = "%f %m %r"   -- резерв места под winbar (для хлебных крошек)
+-- opt.winbar = "%f %m %r"   -- резерв места под winbar (для хлебных крошек)
 -- opt.statusline = "%=%l,%c" -- только координаты внизу
---opt.showtabline = 2       -- всегда показывать табы
+opt.showtabline = 2 -- всегда показывать табы
 
+opt.tabpagemax = 1
 -- В options.lua
 -- opt.statuscolumn = "%s %l %C %@v:lua.Scrollbar@"
 
@@ -53,8 +54,8 @@ opt.clipboard = "unnamedplus" -- системный буфер обмена
 -- =============================================================================
 --  Автодополнение
 -- =============================================================================
-opt.completeopt = "menuone,noinsert,noselect" -- меню без авто-вставки
-opt.wildmode = "longest:full,full"            -- умное автодополнение в cmdline
+--  opt.completeopt = "menuone,noinsert,noselect" -- меню без авто-вставки
+opt.wildmode = "longest:full,full" -- умное автодополнение в cmdline
 
 -- Вместо FileType go
 vim.opt.foldmethod = "expr"
