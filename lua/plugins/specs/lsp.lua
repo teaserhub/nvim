@@ -224,9 +224,10 @@ sources = {
 
             vim.lsp.config("ts_ls",  { single_file_support = true })
             vim.lsp.config("html",   {})
-            vim.lsp.config("cssls",  {})
+        vim.lsp.config("cssls",  {})
+        vim.lsp.config("lua_ls",  {})
 
-            vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls" })
+            vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls", "lua_ls" })
         end,
     },
 }
