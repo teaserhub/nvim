@@ -229,7 +229,15 @@ return {
       vim.lsp.config("ts_ls",  { single_file_support = true })
       vim.lsp.config("html",   {})
       vim.lsp.config("cssls",  {})
-      vim.lsp.config("lua_ls",  {})
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            diagnostics = { globals = { "vim" } },
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+          },
+        },
+      })
 
       vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls", "lua_ls" })
     end,

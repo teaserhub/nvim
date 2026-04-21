@@ -1,6 +1,6 @@
 return {
     "stevearc/conform.nvim",
-    event = "BufWritePre",
+    event = "VeryLazy",
     cmd = { "ConformInfo" },
 
     opts = {
@@ -28,9 +28,9 @@ return {
         },
 
         format_on_save = {
-            timeout_ms = 2000,
-            lsp_fallback = true,
-            async = true,
+            timeout_ms = 3000,
+            lsp_fallback = "fallback",
+            async = false,
         },
 
         default_format_opts = {
@@ -49,7 +49,7 @@ return {
             },
         },
 
-        notify_on_error = true,
+        log_level = vim.log.levels.WARN, -- меньше шума
     },
 
     config = function(_, opts)
@@ -59,7 +59,7 @@ return {
         vim.keymap.set({ "n", "v" }, "<leader>cf", function()
             require("conform").format({
                 async = true,
-                lsp_fallback = true,
+                lsp_format = "fallback",
             })
         end, { desc = "Format code" })
     end,
