@@ -61,7 +61,21 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.lsp.enable("gopls")
   end,
 })
-
+-- lua/core/autocmds.lua
+vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "*",
+    callback = function()
+        -- Go-подсветка
+        vim.api.nvim_set_hl(0, "@function", { fg = "#61afef", bold = true })
+        vim.api.nvim_set_hl(0, "@function.call", { fg = "#56b6c2" })
+        vim.api.nvim_set_hl(0, "@type", { fg = "#e5c07b" })
+        vim.api.nvim_set_hl(0, "@keyword", { fg = "#c678dd", bold = true })
+        vim.api.nvim_set_hl(0, "@string", { fg = "#98c379" })
+        vim.api.nvim_set_hl(0, "@comment", { fg = "#5c6370", italic = true })
+        vim.api.nvim_set_hl(0, "@parameter", { fg = "#e06c75" })
+        vim.api.nvim_set_hl(0, "@field", { fg = "#e5c07b" })
+    end,
+})
 -- -- Вместо автокоманды для Go
 -- vim.api.nvim_create_autocmd("FileType", {
 --     pattern = "*",

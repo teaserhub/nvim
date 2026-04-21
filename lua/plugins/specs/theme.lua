@@ -7,80 +7,80 @@ return {
     },
 
     -- 2️⃣ OneDark Pro (активна по умолчанию)
-    -- {
-    --     "navarasu/onedark.nvim",
-    --     priority = 1000,
-    --     lazy = false,
-    --     config = function()
-    --         require("onedark").setup({
-    --             style = "darker",
-    --             transparent = false,
-    --             terminal_colors = true,
-    --             diagnostics = {
-    --                 darker = true,
-    --                 undercurl = true,
-    --                 background = true,
-    --             },
-    --             highlight_groups = {
-    --                 BufferLineFill = { bg = "#1e222a" },
-    --                 BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", bold = true },
-    --                 StatusLine = { bg = "#282c34", fg = "#abb2bf" },
-    --                 CursorLine = { bg = "#2c313c" },
-    --                 IncSearch = { bg = "#e5c07b", fg = "#282c34", bold = true },
-    --             },
-    --         })
-    --         vim.cmd.colorscheme("onedark")
-    --     end,
-    -- },
-
     {
-    "navarasu/onedark.nvim",
-    priority = 1000,
-    lazy = false,
-    config = function()
-        require("onedark").setup({
-            style = "darker",
-            transparent = false,
-            terminal_colors = true,
-            diagnostics = {
-                darker = true,
-                undercurl = true,
-                background = true,
-            },
-            highlight_groups = {
-                -- UI
-                BufferLineFill = { bg = "#1e222a" },
-                BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", bold = true },
-                StatusLine = { bg = "#282c34", fg = "#abb2bf" },
-                CursorLine = { bg = "#2c313c" },
-                IncSearch = { bg = "#e5c07b", fg = "#282c34", bold = true },
-                FloatBorder = { fg = "#5c6370" },
-                NormalFloat = { bg = "#282c34" },
-                Pmenu = { bg = "#21252b" },
-                PmenuSel = { bg = "#3e4452" },
-                
-                -- ✅ Treesitter (правильные имена!)
-                TSFunction = { fg = "#61afef", bold = true },
-                TSMethod = { fg = "#61afef" },
-                TSField = { fg = "#e5c07b" },
-                TSParameter = { fg = "#e06c75" },
-                TSType = { fg = "#e5c07b" },
-                TSTypeBuiltin = { fg = "#e5c07b", italic = true },
-                TSKeyword = { fg = "#c678dd", bold = true },
-                TSString = { fg = "#98c379" },
-                TSComment = { fg = "#5c6370", italic = true },
-                TSTag = { fg = "#e06c75" },
-                TSTagAttribute = { fg = "#98c379" },
-                
-                -- Git
-                GitSignsAdd = { fg = "#98c379" },
-                GitSignsChange = { fg = "#e5c07b" },
-                GitSignsDelete = { fg = "#e06c75" },
-            },
-        })
-        vim.cmd.colorscheme("onedark") 
-    end,
-}
+        "navarasu/onedark.nvim",
+        priority = 1000,
+        lazy = false,
+        config = function()
+            require("onedark").setup({
+                style = "darker",
+                transparent = false,
+                terminal_colors = true,
+                diagnostics = {
+                    darker = true,
+                    undercurl = true,
+                    background = true,
+                },
+                highlight_groups = {
+                    BufferLineFill = { bg = "#1e222a" },
+                    BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", bold = true },
+                    StatusLine = { bg = "#282c34", fg = "#abb2bf" },
+                    CursorLine = { bg = "#2c313c" },
+                    IncSearch = { bg = "#e5c07b", fg = "#282c34", bold = true },
+                },
+            })
+            vim.cmd.colorscheme("onedark")
+        end,
+    },
+
+--     {
+--     "navarasu/onedark.nvim",
+--     priority = 1000,
+--     lazy = false,
+--     config = function()
+--         require("onedark").setup({
+--             style = "darker",
+--             transparent = false,
+--             terminal_colors = true,
+--             diagnostics = {
+--                 darker = true,
+--                 undercurl = true,
+--                 background = true,
+--             },
+--             highlight_groups = {
+--                 -- UI
+--                 BufferLineFill = { bg = "#1e222a" },
+--                 BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", bold = true },
+--                 StatusLine = { bg = "#282c34", fg = "#abb2bf" },
+--                 CursorLine = { bg = "#2c313c" },
+--                 IncSearch = { bg = "#e5c07b", fg = "#282c34", bold = true },
+--                 FloatBorder = { fg = "#5c6370" },
+--                 NormalFloat = { bg = "#282c34" },
+--                 Pmenu = { bg = "#21252b" },
+--                 PmenuSel = { bg = "#3e4452" },
+--
+--                 -- ✅ Treesitter (правильные имена!)
+--                 TSFunction = { fg = "#61afef", bold = true },
+--                 TSMethod = { fg = "#61afef" },
+--                 TSField = { fg = "#e5c07b" },
+--                 TSParameter = { fg = "#e06c75" },
+--                 TSType = { fg = "#e5c07b" },
+--                 TSTypeBuiltin = { fg = "#e5c07b", italic = true },
+--                 TSKeyword = { fg = "#c678dd", bold = true },
+--                 TSString = { fg = "#98c379" },
+--                 TSComment = { fg = "#5c6370", italic = true },
+--                 TSTag = { fg = "#e06c75" },
+--                 TSTagAttribute = { fg = "#98c379" },
+--
+--                 -- Git
+--                 GitSignsAdd = { fg = "#98c379" },
+--                 GitSignsChange = { fg = "#e5c07b" },
+--                 GitSignsDelete = { fg = "#e06c75" },
+--             },
+--         })
+--         vim.cmd.colorscheme("onedark") 
+--     end,
+-- }
 
     -- 3️⃣ Catppuccin (закомментирована, раскомментируй чтобы использовать)
     -- {
