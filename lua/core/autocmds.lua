@@ -290,7 +290,7 @@ local function apply_highlights()
         ["@type.builtin"]     = { fg = "#e5c07b", italic = true },
         ["@keyword"]          = { fg = "#c678dd", bold = true },
         ["@keyword.return"]   = { fg = "#c678dd" },
-        ["@string"]           = { fg = "#98c379" },
+        ["@string"]           = { fg = "#98c379" , italic = true, bold = false}, -- во всех языках 
         ["@string.escape"]    = { fg = "#56b6c2" },
         ["@comment"]          = { fg = "#5c6370", italic = true },
         ["@variable"]         = { fg = "#abb2bf" },
