@@ -29,7 +29,7 @@ return {
                     "prettier",      -- основной форматтер для JS/TS/HTML/CSS
                     "eslint_d",      -- быстрый линтер JS/TS
                     "golangci-lint", -- продвинутый линтер Go
-                    "staticcheck",   -- статический анализ Go
+                    -- "staticcheck",   -- статический анализ Go
                 }
 
                 for _, tool in ipairs(tools) do
