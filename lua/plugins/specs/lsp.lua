@@ -31,14 +31,13 @@ return {
                     "golangci-lint", -- продвинутый линтер Go
                     -- "staticcheck",   -- статический анализ Go
                 }
-
-                for _, tool in ipairs(tools) do
-                    local pkg = registry.get_package(tool)
-                    if pkg and not pkg:is_installed() then
-                        vim.notify("Mason: installing " .. tool, vim.log.levels.INFO)
-                        pkg:install()
-                    end
-                end
+for _, tool in ipairs(tools) do
+    local ok, pkg = pcall(registry.get_package, tool)
+    if ok and not pkg:is_installed() then
+        vim.notify("Mason: installing " .. tool, vim.log.levels.INFO)
+        pkg:install()
+    end
+end
             end)
         end,
     },
@@ -89,8 +88,8 @@ sources = {
     default = { "lsp", "path", "snippets", "buffer" },
     providers = (function()
         local function not_in_string()
-            local node = vim.treesitter.get_node()
             if not node then return true end
+            local node = vim.treesitter.get_node({ ignore_injections = true })
             local t = node:type()
             return t ~= "string"
                 and t ~= "string_content"
@@ -210,7 +209,7 @@ sources = {
             vim.lsp.config("gopls", {
                 settings = {
                     gopls = {
-                        gofumpt = true,
+                        gofumpt = false,
                         staticcheck = true,
                         analyses = { unusedparams = true, shadow = true, nilness = true },
                         hints = {
