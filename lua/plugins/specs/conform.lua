@@ -21,7 +21,7 @@ return {
 
             -- Data
             json = { "prettier" },
-            markdown = { "prettier" },
+            -- markdown = { "prettier" },
 
             -- Lua
             lua = { "stylua" },
@@ -30,7 +30,7 @@ return {
         format_on_save = {
             timeout_ms = 2000,
             lsp_fallback = true,
-            async = false,
+            async = true,
         },
 
         default_format_opts = {
