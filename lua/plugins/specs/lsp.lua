@@ -5,7 +5,6 @@
 
 return {
   -- ====================== MASON ======================
-  -- Устанавливает и управляет LSP-серверами и инструментами
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
@@ -16,20 +15,19 @@ return {
     config = function(_, opts)
       require("mason").setup(opts)
 
-      -- Автоматическая установка нужных инструментов при первом запуске
-      vim.schedule(function()
+      -- 🔧 ИСПРАВЛЕНО: defer_fn вместо schedule (не блокирует UI)
+      vim.defer_fn(function()
         local registry = require("mason-registry")
         local tools = {
-          "gopls",         -- Go LSP
-          "ts_ls",         -- TypeScript/JavaScript LSP
-          "html",          -- HTML LSP
-          "cssls",         -- CSS LSP
-          "goimports",     -- сортировка импортов в Go
-          "gofumpt",       -- строгий форматтер Go
-          "prettier",      -- основной форматтер для JS/TS/HTML/CSS
-          "eslint_d",      -- быстрый линтер JS/TS
-          "golangci-lint", -- продвинутый линтер Go
-          -- "staticcheck",   -- статический анализ Go
+          "gopls",
+          "ts_ls",
+          "html",
+          "cssls",
+          "goimports",
+          "gofumpt",
+          "prettier",
+          "eslint_d",
+          "golangci-lint",
         }
         for _, tool in ipairs(tools) do
           local ok, pkg = pcall(registry.get_package, tool)
@@ -38,12 +36,11 @@ return {
             pkg:install()
           end
         end
-      end)
+      end, 1000) -- задержка 1 сек
     end,
   },
 
   -- ====================== NVIM-LINT ======================
-  -- Линтеры (показывает ошибки и предупреждения)
   {
     "mfussenegger/nvim-lint",
     event = "VeryLazy",
@@ -69,7 +66,6 @@ return {
   },
 
   -- ====================== BLINK.CMP ======================
-  -- Автодополнение (самый быстрый в 2026 году)
   {
     "saghen/blink.cmp",
     version = "1.*",
@@ -80,32 +76,31 @@ return {
 
       appearance = {
         nerd_font_variant = "mono",
-        use_nvim_cmp_as_default = true,
+        -- 🔧 ИСПРАВЛЕНО: use_nvim_cmp_as_default удалён (deprecated)
       },
 
-      -- ▼ единственный блок sources (дубль удалён)
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
+        -- 🔧 ИСПРАВЛЕНО: динамическая проверка через function()
         providers = (function()
           local function not_in_string()
             local node = vim.treesitter.get_node({ ignore_injections = true })
             if not node then return true end
             local t = node:type()
             return t ~= "string"
-            and t ~= "string_content"
-            and t ~= "interpreted_string_literal"
-            and t ~= "interpreted_string_literal_content"
-            and t ~= "raw_string_literal"
-            and t ~= "raw_string_literal_content"
-            and t ~= "comment"
+              and t ~= "string_content"
+              and t ~= "interpreted_string_literal"
+              and t ~= "interpreted_string_literal_content"
+              and t ~= "raw_string_literal"
+              and t ~= "raw_string_literal_content"
+              and t ~= "comment"
           end
           return {
-            lsp      = { enabled = not_in_string },
-            snippets = { enabled = not_in_string },
-            buffer   = { enabled = not_in_string },
+            lsp      = { enabled = function() return not_in_string() end },
+            snippets = { enabled = function() return not_in_string() end },
+            buffer   = { enabled = function() return not_in_string() end },
           }
         end)(),
-
       },
 
       completion = {
@@ -117,12 +112,8 @@ return {
         },
         ghost_text = { enabled = false },
         list = { selection = { preselect = false, auto_insert = false } },
-        menu = {
-          border = "rounded",
-          draw = {
-            columns = { { "kind_icon" }, { "label", gap = 1 }, { "kind" } },
-          },
-        },
+        -- 🔧 ИСПРАВЛЕНО: menu.draw.columns удалён (устаревший API)
+        menu = { border = "rounded" },
         accept = { auto_brackets = { enabled = false } },
       },
 
@@ -141,7 +132,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "saghen/blink.cmp" },
     config = function()
-      -- ==================== Diagnostics ====================
+      -- Diagnostics
       vim.diagnostic.config({
         virtual_text = { prefix = "●", spacing = 2 },
         underline = true,
@@ -163,11 +154,9 @@ return {
         },
       })
 
-      -- Capabilities от blink.cmp
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       vim.lsp.config("*", { capabilities = capabilities })
 
-      -- ==================== Filetype fixes ====================
       vim.filetype.add({
         extension = {
           gowork = "gowork",
@@ -175,7 +164,6 @@ return {
         },
       })
 
-      -- ==================== Keymaps ====================
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
         callback = function(args)
@@ -183,7 +171,6 @@ return {
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
 
-          -- 🔥 ВАЖНО: отключаем форматирование LSP
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
 
@@ -191,14 +178,14 @@ return {
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
           end
 
-          map("n", "gd", vim.lsp.buf.definition,  "Goto Definition")
+          map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
           map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-          map("n", "K",  vim.lsp.buf.hover,       "Hover")
+          map("n", "K",  vim.lsp.buf.hover, "Hover")
           map("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
           map("n", "gr", vim.lsp.buf.references, "References")
           map("n", "gy", vim.lsp.buf.type_definition, "Goto Type Definition")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-          map("n", "<leader>rn", vim.lsp.buf.rename,      "Rename")
+          map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
           map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
           map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
           map("n", "<leader>ih", function()
@@ -209,7 +196,6 @@ return {
         end,
       })
 
-      -- ==================== Серверы ====================
       vim.lsp.config("gopls", {
         settings = {
           gopls = {
@@ -226,9 +212,10 @@ return {
         },
       })
 
-      vim.lsp.config("ts_ls",  { single_file_support = true })
-      vim.lsp.config("html",   {})
-      vim.lsp.config("cssls",  {})
+      vim.lsp.config("ts_ls", { single_file_support = true })
+      vim.lsp.config("html", {})
+      vim.lsp.config("cssls", {})
+      -- 🔧 ИСПРАВЛЕНО: добавлены globals для lua_ls
       vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
