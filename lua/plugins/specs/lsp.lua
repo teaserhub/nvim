@@ -85,26 +85,28 @@ return {
             },
 
             -- ▼ единственный блок sources (дубль удалён)
-            sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-                providers = {
-                    lsp = {
-                        -- Отключаем автодополнение внутри строк и комментариев
-                        enabled = function()
-                            local node = vim.treesitter.get_node()
-                            if not node then return true end
-local t = node:type()
-return t ~= "string"
-    and t ~= "string_content"
-    and t ~= "interpreted_string_literal"
-    and t ~= "interpreted_string_literal_content"  -- ← вот эта
-    and t ~= "raw_string_literal"
-    and t ~= "raw_string_literal_content"          -- на будущее для `...`
-    and t ~= "comment"
-                        end,
-                    },
-                },
-            },
+sources = {
+    default = { "lsp", "path", "snippets", "buffer" },
+    providers = (function()
+        local function not_in_string()
+            local node = vim.treesitter.get_node()
+            if not node then return true end
+            local t = node:type()
+            return t ~= "string"
+                and t ~= "string_content"
+                and t ~= "interpreted_string_literal"
+                and t ~= "interpreted_string_literal_content"
+                and t ~= "raw_string_literal"
+                and t ~= "raw_string_literal_content"
+                and t ~= "comment"
+        end
+        return {
+            lsp      = { enabled = not_in_string },
+            snippets = { enabled = not_in_string },
+            buffer   = { enabled = not_in_string },
+        }
+    end)(),
+},
 
             completion = {
                 trigger = { show_on_trigger_character = true },
