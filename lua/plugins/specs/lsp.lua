@@ -182,6 +182,10 @@ sources = {
                     local bufnr = args.buf
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
                     if not client then return end
+                    
+                        -- 🔥 ВАЖНО: отключаем форматирование LSP
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
 
                     local map = function(mode, lhs, rhs, desc)
                         vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
