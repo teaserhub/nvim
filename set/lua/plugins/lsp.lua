@@ -71,7 +71,7 @@ return {
 				vim.tbl_extend("force", common_opts, {
 					settings = {
 						gopls = {
-							gofumpt = true,
+							gofumpt = false,
 							staticcheck = true,
 							usePlaceholders = true,
 							analyses = { unusedparams = true },
