@@ -14,9 +14,9 @@ opt.laststatus = 3        -- глобальный статуслайн (один
 opt.cmdheight = 1         -- высота командной строки
 -- opt.winbar = "%f %m %r"   -- резерв места под winbar (для хлебных крошек)
 -- opt.statusline = "%=%l,%c" -- только координаты внизу
-opt.showtabline = 2 -- всегда показывать табы
+-- opt.showtabline = 2 -- всегда показывать табы
 
-opt.tabpagemax = 1
+-- opt.tabpagemax = 1
 -- В options.lua
 -- opt.statuscolumn = "%s %l %C %@v:lua.Scrollbar@"
 

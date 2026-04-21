@@ -6,53 +6,51 @@ return {
         lazy = true,
     },
 
-    -- 2️⃣ OneDark Pro (активна по умолчанию)
-    {
-        "navarasu/onedark.nvim",
-        priority = 1000,
-        lazy = false,
-        config = function()
-            require("onedark").setup({
-                style = "dark",
-                            -- 🔧 Тёмный фон как в GitHub Darki
-                                        -- 🔧 Цвета VSCode Dark+
-            colors = {
-                -- Фон (как в VSCode)i
-                                    -- Фоны (от тёмного к светлому)
-                    bg0 = "#2b2b2b",  -- основной фон
-                    bg1 = "#1f1f1f",  -- темнее основного (для контраста)
-                    bg2 = "#333333",  -- светлее основного (popup меню)
-                    bg3 = "#3c3c3c",  -- ещё светлее (границы, разделители)
-                    bg4 = "#252525",  -- статусбар, табы
-                -- Акценты VSCode
-                red = "#f44747",      -- ошибки, return
-                dark_red = "#d16969",
-                green = "#6a9955",    -- строки, комментарии
-                yellow = "#dcdcaa",   -- функции
-                dark_yellow = "#d7ba7d",
-                blue = "#9cdcfe",     -- типы
-                purple = "#c586c0",   -- ключевые слова
-                cyan = "#4ec9b0",     -- вызовы функций
-                orange = "#ce9178",   -- числа, константы
-            },
-                transparent = false,
-                terminal_colors = true,
-                diagnostics = {
-                    darker = true,
-                    undercurl = true,
-                    background = true,
-                },
-                highlight_groups = {
-                    BufferLineFill = { bg = "#1e222a" },
-                    BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", bold = true },
-                    StatusLine = { bg = "#282c34", fg = "#abb2bf" },
-                    CursorLine = { bg = "#2c313c" },
-                    IncSearch = { bg = "#e5c07b", fg = "#282c34", bold = true },
-                },
-            })
-            vim.cmd.colorscheme("onedark")
-        end,
-    },
+{
+  "navarasu/onedark.nvim",
+  priority = 1000,
+  lazy = false,
+  config = function()
+    require("onedark").setup({
+      style = "darker",
+      transparent = false,
+      term_colors = true,           -- ✅ Исправлено: официальное имя опции
+      ending_tildes = false,        -- ✅ Убирает визуальный шум "~" в пустых строках
+      lualine = { transparent = false }, -- ✅ Бесшовная интеграция с lualine
+
+      diagnostics = {
+        darker = true,
+        undercurl = true,
+        background = true,
+      },
+
+      code_style = {
+        comments = "italic",
+        keywords = "italic",
+        functions = "none",
+        strings = "none",
+        variables = "none",
+      },
+
+      -- ✅ Исправлено: highlights вместо highlight_groups (старое поле игнорировалось)
+      highlights = {
+        BufferLineFill = { bg = "#1e222a" },
+        BufferLineBufferSelected = { bg = "#282c34", fg = "#abb2bf", style = "bold" },
+        StatusLine = { bg = "#282c34", fg = "#abb2bf" },
+        CursorLine = { bg = "#2c313c" },
+        IncSearch = { bg = "#e5c07b", fg = "#282c34", style = "bold" },
+        
+        -- 🌿 Современные Treesitter/LSP группы (Neovim 0.10+)
+        ["@comment"] = { fg = "#5c6370", style = "italic" },
+        ["@keyword"] = { fg = "#c678dd", style = "italic" },
+        ["@function"] = { fg = "#61afef" },
+        ["@variable"] = { fg = "#e06c75" },
+      },
+    })
+
+    vim.cmd.colorscheme("onedark")
+  end,
+}
 
 --     {
 --     "navarasu/onedark.nvim",
