@@ -30,7 +30,6 @@ return {
                     "eslint_d",      -- быстрый линтер JS/TS
                     "golangci-lint", -- продвинутый линтер Go
                     "staticcheck",   -- статический анализ Go
-                    -- "stylua",      -- раскомментируй, если будешь много писать на Lua
                 }
 
                 for _, tool in ipairs(tools) do
@@ -53,17 +52,15 @@ return {
             local lint = require("lint")
 
             lint.linters_by_ft = {
-                go = { "golangci-lint" }, -- ← исправлено (без дефиса!)
+                go = { "golangci-lint" },
                 javascript = { "eslint_d" },
                 typescript = { "eslint_d" },
                 javascriptreact = { "eslint_d" },
                 typescriptreact = { "eslint_d" },
             }
 
-            -- Запускаем линтеры после сохранения и выхода из режима вставки
             vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
                 callback = function()
-                    -- Защита от очень больших файлов
                     if vim.bo.buflisted and vim.fn.line("$") <= 5000 then
                         pcall(lint.try_lint)
                     end
@@ -87,8 +84,26 @@ return {
                 use_nvim_cmp_as_default = true,
             },
 
+            -- ▼ единственный блок sources (дубль удалён)
             sources = {
                 default = { "lsp", "path", "snippets", "buffer" },
+                providers = {
+                    lsp = {
+                        -- Отключаем автодополнение внутри строк и комментариев
+                        enabled = function()
+                            local node = vim.treesitter.get_node()
+                            if not node then return true end
+local t = node:type()
+return t ~= "string"
+    and t ~= "string_content"
+    and t ~= "interpreted_string_literal"
+    and t ~= "interpreted_string_literal_content"  -- ← вот эта
+    and t ~= "raw_string_literal"
+    and t ~= "raw_string_literal_content"          -- на будущее для `...`
+    and t ~= "comment"
+                        end,
+                    },
+                },
             },
 
             completion = {
@@ -114,7 +129,7 @@ return {
                 window = { border = "rounded" },
             },
 
-            fuzzy = { implementation = "prefer_rust" }, -- самый быстрый режим
+            fuzzy = { implementation = "prefer_rust" },
         },
     },
 
@@ -128,14 +143,14 @@ return {
             vim.diagnostic.config({
                 virtual_text = { prefix = "●", spacing = 2 },
                 underline = true,
-                    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = "󰅚",
-            [vim.diagnostic.severity.WARN]  = "󰀪",
-            [vim.diagnostic.severity.INFO]  = "󰌵",
-            [vim.diagnostic.severity.HINT]  = "󰌶",
-        },
-    },
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = "󰅚",
+                        [vim.diagnostic.severity.WARN]  = "󰀪",
+                        [vim.diagnostic.severity.INFO]  = "󰌵",
+                        [vim.diagnostic.severity.HINT]  = "󰌶",
+                    },
+                },
                 update_in_insert = false,
                 severity_sort = true,
                 float = {
@@ -151,7 +166,6 @@ return {
             vim.lsp.config("*", { capabilities = capabilities })
 
             -- ==================== Filetype fixes ====================
-            -- Убираем предупреждения "Unknown filetype 'gowork'" и "gotmpl"
             vim.filetype.add({
                 extension = {
                     gowork = "gowork",
@@ -171,18 +185,17 @@ return {
                         vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
                     end
 
-                    -- Навигация
-                    map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
+                    map("n", "gd", vim.lsp.buf.definition,  "Goto Definition")
                     map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
-                    map("n", "K", vim.lsp.buf.hover, "Hover")
+                    map("n", "K",  vim.lsp.buf.hover,       "Hover")
                     map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-                    map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
-
-                    -- Диагностика
+                    map("n", "<leader>rn", vim.lsp.buf.rename,      "Rename")
                     map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
                     map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
                     map("n", "<leader>ih", function()
-                        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
+                        vim.lsp.inlay_hint.enable(
+                            not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+                        )
                     end, "Toggle Inlay Hints")
                 end,
             })
@@ -195,23 +208,19 @@ return {
                         staticcheck = true,
                         analyses = { unusedparams = true, shadow = true, nilness = true },
                         hints = {
-                            assignVariableTypes = true,
+                            assignVariableTypes    = true,
                             compositeLiteralFields = true,
-                            constantValues = true,
-                            parameterNames = true,
+                            constantValues         = true,
+                            parameterNames         = true,
                         },
                     },
                 },
             })
 
-            vim.lsp.config("ts_ls", {
-                single_file_support = true,
-            })
+            vim.lsp.config("ts_ls",  { single_file_support = true })
+            vim.lsp.config("html",   {})
+            vim.lsp.config("cssls",  {})
 
-            vim.lsp.config("html", {})
-            vim.lsp.config("cssls", {})
-
-            -- Запуск всех серверов
             vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls" })
         end,
     },
