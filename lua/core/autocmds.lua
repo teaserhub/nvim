@@ -43,7 +43,7 @@ aucmd("TextYankPost", {
     group    = G.yank,
     desc     = "Highlight yanked text",
     callback = function()
-        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 180 })
+        vim.hl.on_yank({ higroup = "IncSearch", timeout = 180 })
     end,
 })
 

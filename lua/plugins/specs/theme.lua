@@ -13,7 +13,7 @@ return {
         lazy = false,
         config = function()
             require("onedark").setup({
-                style = "darker",
+                style = "dark",
                 transparent = false,
                 terminal_colors = true,
                 diagnostics = {
