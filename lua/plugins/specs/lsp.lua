@@ -86,25 +86,26 @@ end
             -- ▼ единственный блок sources (дубль удалён)
 sources = {
     default = { "lsp", "path", "snippets", "buffer" },
-    providers = (function()
-        local function not_in_string()
-            if not node then return true end
-            local node = vim.treesitter.get_node({ ignore_injections = true })
-            local t = node:type()
-            return t ~= "string"
-                and t ~= "string_content"
-                and t ~= "interpreted_string_literal"
-                and t ~= "interpreted_string_literal_content"
-                and t ~= "raw_string_literal"
-                and t ~= "raw_string_literal_content"
-                and t ~= "comment"
-        end
-        return {
-            lsp      = { enabled = not_in_string },
-            snippets = { enabled = not_in_string },
-            buffer   = { enabled = not_in_string },
-        }
-    end)(),
+providers = (function()
+    local function not_in_string()
+        local node = vim.treesitter.get_node({ ignore_injections = true })
+        if not node then return true end
+        local t = node:type()
+        return t ~= "string"
+            and t ~= "string_content"
+            and t ~= "interpreted_string_literal"
+            and t ~= "interpreted_string_literal_content"
+            and t ~= "raw_string_literal"
+            and t ~= "raw_string_literal_content"
+            and t ~= "comment"
+    end
+    return {
+        lsp      = { enabled = not_in_string },
+        snippets = { enabled = not_in_string },
+        buffer   = { enabled = not_in_string },
+    }
+end)(),
+    
 },
 
             completion = {
@@ -193,6 +194,9 @@ sources = {
                     map("n", "gd", vim.lsp.buf.definition,  "Goto Definition")
                     map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
                     map("n", "K",  vim.lsp.buf.hover,       "Hover")
+                    map("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
+map("n", "gr", vim.lsp.buf.references, "References")
+map("n", "gy", vim.lsp.buf.type_definition, "Goto Type Definition")
                     map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
                     map("n", "<leader>rn", vim.lsp.buf.rename,      "Rename")
                     map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
@@ -209,7 +213,7 @@ sources = {
             vim.lsp.config("gopls", {
                 settings = {
                     gopls = {
-                        gofumpt = false,
+                        gofumpt = true,
                         staticcheck = true,
                         analyses = { unusedparams = true, shadow = true, nilness = true },
                         hints = {
