@@ -127,8 +127,15 @@ return {
             -- ==================== Diagnostics ====================
             vim.diagnostic.config({
                 virtual_text = { prefix = "●", spacing = 2 },
-                signs = true,
                 underline = true,
+                    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚",
+            [vim.diagnostic.severity.WARN]  = "󰀪",
+            [vim.diagnostic.severity.INFO]  = "󰌵",
+            [vim.diagnostic.severity.HINT]  = "󰌶",
+        },
+    },
                 update_in_insert = false,
                 severity_sort = true,
                 float = {
