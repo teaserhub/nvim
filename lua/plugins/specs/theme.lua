@@ -14,6 +14,26 @@ return {
         config = function()
             require("onedark").setup({
                 style = "dark",
+                            -- 🔧 Тёмный фон как в GitHub Darki
+                                        -- 🔧 Цвета VSCode Dark+
+            colors = {
+                -- Фон (как в VSCode)
+                bg0 = "#1e1e1e",  -- основной фон
+                bg1 = "#252526",  -- чуть светлее (статусбар)
+                bg2 = "#2d2d30",  -- ещё светлее
+                bg3 = "#3c3c3c",  -- границы
+
+                -- Акценты VSCode
+                red = "#f44747",      -- ошибки, return
+                dark_red = "#d16969",
+                green = "#6a9955",    -- строки, комментарии
+                yellow = "#dcdcaa",   -- функции
+                dark_yellow = "#d7ba7d",
+                blue = "#9cdcfe",     -- типы
+                purple = "#c586c0",   -- ключевые слова
+                cyan = "#4ec9b0",     -- вызовы функций
+                orange = "#ce9178",   -- числа, константы
+            },
                 transparent = false,
                 terminal_colors = true,
                 diagnostics = {
@@ -78,7 +98,7 @@ return {
 --                 GitSignsDelete = { fg = "#e06c75" },
 --             },
 --         })
---         vim.cmd.colorscheme("onedark") 
+--         vim.cmd.colorscheme("onedark")
 --     end,
 -- }
 
