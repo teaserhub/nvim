@@ -3,34 +3,26 @@ return {
   "folke/noice.nvim",
   event = "VeryLazy",
   opts = {
-    -- ✅ PRESET: минимальная база + наши оверрайды
-    presets = {
-      bottom_search = false,         -- Нет search команды снизу
-      command_palette = true,        -- <C-n> поиск команд
-      long_message_to_split = true,  -- Длинные → split
-      lsp_doc_border = true,         -- LSP doc с border
-    },
-
+    -- 🔍 LSP: только hover, signature отдаём blink.cmp
     lsp = {
       hover = { enabled = true, view = "popup" },
-      signature = { enabled = false }, -- blink.cmp берет на себя
-      
+      signature = { enabled = false },
       override = {
         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
         ["vim.lsp.util.stylize_markdown"] = true,
-        ["vim.diagnostic.open_float"] = true, -- ✅ Диагностика в popup
       },
     },
 
     cmdline = { enabled = true, view = "cmdline_popup" },
-    popupmenu = { enabled = false }, -- blink.cmp only
+    popupmenu = { enabled = false }, -- blink.cmp остаётся единственным
 
+    -- 🎨 Визуальные параметры
     views = {
       popup = {
         border = { style = "rounded" },
         size = { max_width = 85, max_height = 20 },
-        padding = { 1, 3 },
-        focusable = false,
+        padding = { 1, 3 }, -- {vertical, horizontal} валидный nui-формат
+        focusable = true,   -- ✅ Позволяет скроллить и копировать текст
       },
       cmdline_popup = {
         border = { style = "rounded" },
@@ -40,31 +32,23 @@ return {
       },
       notify = {
         max_width = 60,
-        stages = "fade_in_slide_out", -- ✅ Анимация появления/исчезновения
+        stages = "fade_in_slide_out",
       },
-      split = { 
-        enter = true,                 -- Фокус при открытии split
-      },
+      split = { enter = true },
     },
 
+    -- 🗺️ Маршрутизация: убираем шум, длинные логи → split
     routes = {
-      -- ✅ LSP спам
       { filter = { event = "lsp", kind = "progress" }, opts = { skip = true } },
       { filter = { find = "No information available" }, opts = { skip = true } },
-      
-      -- ✅ Файловые операции
       { filter = { event = "msg_show", find = "written" }, opts = { skip = true } },
       { filter = { event = "msg_show", find = "%d+L, %d+B" }, opts = { skip = true } },
-      
-      -- ✅ Поиск/счетчики
       { filter = { event = "msg_show", find = "^/" }, opts = { skip = true } },
       { filter = { event = "msg_show", kind = "search_count" }, opts = { skip = true } },
-      
-      -- ✅ Длинные сообщения в split (Claude прав: 10 лучше 5)
-      { filter = { event = "msg_show", min_height = 10 }, view = "split" },
+      { filter = { event = "msg_show", min_height = 8 }, view = "split" },
     },
 
-    throttle = 1000 / 30, -- 30 FPS
-    max_length = 150,     -- ✅ Обрезаем слишком длинные сообщения
+    -- ⚙️ Глобальные ограничения
+    throttle = 16, -- ~60Hz debounce, нет лагов при быстром вводе
   },
 }
