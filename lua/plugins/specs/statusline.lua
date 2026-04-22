@@ -86,15 +86,16 @@ return {
 
     local function set_hls()
       local h = vim.api.nvim_set_hl
-      h(0, "ModeNormal",   { fg = "#c678dd", bold = true })
-      h(0, "ModeInsert",   { fg = "#98c379", bold = true })
-      h(0, "ModeVisual",   { fg = "#e5c07b", bold = true })
-      h(0, "ModeOther",    { fg = "#56b6c2" })
-      h(0, "StatusLinePos",{ fg = "#56b6c2" })
-      h(0, "StatusLineNC", { fg = "#5c6370" })
-      -- ✅ Диагностика в строке статуса через отдельные группы
-      h(0, "DiagErr",      { fg = "#e06c75" })
-      h(0, "DiagWarn",     { fg = "#e5c07b" })
+      -- ✅ Явно указываем bg = "NONE" для всех групп
+      h(0, "StatusLine",   { fg = "#cdd6f4", bg = "NONE" })
+      h(0, "StatusLineNC", { fg = "#5c6370", bg = "NONE" })
+      h(0, "ModeNormal",   { fg = "#c678dd", bg = "NONE", bold = true })
+      h(0, "ModeInsert",   { fg = "#98c379", bg = "NONE", bold = true })
+      h(0, "ModeVisual",   { fg = "#e5c07b", bg = "NONE", bold = true })
+      h(0, "ModeOther",    { fg = "#56b6c2", bg = "NONE" })
+      h(0, "StatusLinePos",{ fg = "#56b6c2", bg = "NONE" })
+      h(0, "DiagErr",      { fg = "#e06c75", bg = "NONE" })
+      h(0, "DiagWarn",     { fg = "#e5c07b", bg = "NONE" })
     end
 
     -- ✅ FIX: highlights переприменяются при смене темы
