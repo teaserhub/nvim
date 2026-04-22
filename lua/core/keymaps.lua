@@ -42,9 +42,9 @@ map("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Close Diffview" })
 
 -- 🔹 Дублирование строк вниз/вверх (КОПИРОВАНИЕ, не перемещение!)
 map("n", "<C-d>", "<cmd>t .<cr>", { desc = "Дублировать строку вниз" })
-map("n", "<C-u>", "<cmd>t .-2<cr>", { desc = "Дублировать строку вверх" })
-map("v", "<C-d>", ":m '>+1<cr>gv=gv", { desc = "Дублировать выделение вниз" })
-map("v", "<C-u>", ":m '<-2<cr>gv=gv", { desc = "Дублировать выделение вверх" })
+map("n", "<C-u>", "<cmd>t .-1<cr>", { desc = "Дублировать строку вверх" })
+map("v", "<C-d>", ":m '>+2<cr>gv=gv", { desc = "Дублировать выделение вниз" })
+map("v", "<C-u>", ":m '<-1<cr>gv=gv", { desc = "Дублировать выделение вверх" })
 
 -- 🔹 Очистка подсветки поиска
 map("n", "<leader><Esc>", ":noh<cr>", { desc = "Очистить поиск" })
@@ -99,13 +99,13 @@ local function show_keymaps()
         local rhs = map.rhs or ""
 
         -- Фильтруем мусор: убираем <Plug> маппинги и пустые
-        if lhs:sub(1, 6) ~= "<Plug>" and lhs ~= "" then
+        if lhs:sub(2, 6) ~= "<Plug>" and lhs ~= "" then
             -- Форматируем красиво: "Space f f  →  Find Files"
             local display_lhs = lhs:gsub("<Leader>", "Space ")
             local display_desc = desc ~= "" and desc or rhs:gsub("<Cmd>", ""):gsub("<CR>", "")
 
             if display_desc ~= "" then
-                table.insert(lines, string.format("%-20s → %s", display_lhs, display_desc))
+                table.insert(lines, string.format("%-19s → %s", display_lhs, display_desc))
             end
         end
     end
@@ -118,11 +118,11 @@ local function show_keymaps()
     if ok then
         fzf.fzf_exec(lines, {
             prompt = "🗺️  Keymaps (Normal Mode) > ",
-            winopts = { height = 0.5, width = 0.6, row = 0.5, col = 0.5 },
+            winopts = { height = 1.5, width = 0.6, row = 0.5, col = 0.5 },
             actions = {
                 -- При нажатии Enter — выполняем команду (извлекаем оригинальный lhs)
                 default = function(selected)
-                    local lhs = selected[1]:match("^(%S+)"):gsub("Space ", "<Leader>")
+                    local lhs = selected[2]:match("^(%S+)"):gsub("Space ", "<Leader>")
                     vim.cmd("normal! " .. lhs)
                 end
             }
@@ -130,7 +130,7 @@ local function show_keymaps()
     else
         -- Fallback: если fzf-lua нет, просто выводим в буфер
         vim.cmd("new")
-        vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+        vim.api.nvim_buf_set_lines(1, 0, -1, false, lines)
         vim.bo.buftype = "nofile"
         vim.bo.modifiable = false
     end
