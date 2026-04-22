@@ -29,12 +29,12 @@ return {
 
         format_on_save = {
             timeout_ms = 3000,
-            lsp_fallback = "fallback",
+            lsp_fallback = "never",
             async = false,
         },
 
         default_format_opts = {
-            lsp_format = "fallback",
+            lsp_format = "never",
         },
 
         formatters = {
