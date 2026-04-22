@@ -1,70 +1,54 @@
--- plugins/specs/lualine.lua
 return {
-  "nvim-lualine/lualine.nvim",
-  event = "VeryLazy",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
+  "stevearc/conform.nvim",
+  event = "VeryLazy", -- ✅ Грузится сразу, чтобы <leader>cf работал с первой секунды
+  cmd = { "ConformInfo" },
+
   opts = {
-    options = {
-      theme = "auto",
-      globalstatus = true,
-      transparent = true,
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
-      disabled_filetypes = { "oil", "yazi", "Trouble", "lazy", "mason" },
-      always_divide_middle = true, -- ✅ Предотвращает поломку layout при узких окнах
+    formatters_by_ft = {
+      go = { "goimports", "gofumpt" },
+      javascript = { "prettier" },
+      typescript = { "prettier" },
+      javascriptreact = { "prettier" },
+      typescriptreact = { "prettier" },
+      html = { "prettier" },
+      css = { "prettier" },
+      scss = { "prettier" },
+      json = { "prettier" },
+      markdown = { "prettier" },
+      lua = { "stylua" },
     },
 
-    sections = {
-      lualine_a = {
-        {
-          "mode",
-          fmt = function(str) return str:sub(1, 1) end,
-        },
-      },
-      lualine_b = {
-        { "branch", icon = "" },
-        {
-          "diff",
-          symbols = { added = " ", modified = " ", removed = " " },
-          colored = true, -- ✅ Цвета git-статуса из темы
-        },
-      },
-      lualine_c = {
-        {
-          "filename",
-          path = 1,
-          symbols = { modified = " ●", readonly = " ", unnamed = "[No Name]" },
-        },
-        {
-          "diagnostics",
-          sources = { "nvim_diagnostic" },
-          symbols = { error = " ", warn = " ", info = " ", hint = "󰌶 " }, -- ✅ NF v3 compatible
-        },
-      },
-      lualine_x = {
-        {
-          "encoding",
-          cond = function() return vim.bo.fenc ~= "utf-8" and vim.bo.fenc ~= "" end,
-        },
-        {
-          "fileformat",
-          symbols = { unix = "LF", dos = "CRLF", mac = "CR" },
-        },
-        { "filetype", icon_only = false },
-      },
-      lualine_y = { "progress" },
-      lualine_z = { "location" },
+    format_on_save = {
+      timeout_ms = 3000,
+      async = false,           -- 🔴 Критично: синхронно для атомарного :w
+      lsp_format = "never",    -- ✅ Никогда не делегировать сохранение LSP
     },
 
-    inactive_sections = {
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = { { "filename", path = 0 } }, -- ✅ Только имя в неактивных окнах
-      lualine_x = { { "location" } },
-      lualine_y = {},
-      lualine_z = {},
+    default_format_opts = {
+      lsp_format = "never",    -- ✅ Глобальный запрет LSP-форматирования
     },
 
-    extensions = { "lazy", "mason", "trouble", "quickfix", "oil" }, -- ✅ Убран несовместимый "fzf"
+    formatters = {
+      stylua = {
+        prepend_args = {
+          "--config-path",
+          vim.fn.stdpath("config") .. "/stylua.toml",
+        },
+      },
+    },
+
+    log_level = vim.log.levels.WARN,
   },
+
+  config = function(_, opts)
+    require("conform").setup(opts)
+
+    -- 🎯 Ручное форматирование (строго через conform, без LSP-fallback)
+    vim.keymap.set({ "n", "v" }, "<leader>cf", function()
+      require("conform").format({
+        async = true,
+        lsp_format = "never",  -- ✅ Явный запрет LSP при ручном вызове
+      })
+    end, { desc = "Format code" })
+  end,
 }

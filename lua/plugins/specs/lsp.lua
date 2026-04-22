@@ -1,6 +1,5 @@
--- plugins/lsp.lua
 -- =============================================================
--- LSP + Mason + blink.cmp + nvim-lint — Neovim 0.12 (2026)
+-- LSP + Mason + blink.cmp + nvim-lint — Neovim 0.12 ULTIMATE
 -- =============================================================
 
 return {
@@ -8,26 +7,26 @@ return {
   {
     "mason-org/mason.nvim",
     cmd = "Mason",
-    opts = {
-      ui = { border = "rounded" },
-      max_concurrent_installers = 4,
-    },
+    opts = { ui = { border = "rounded" } },
     config = function(_, opts)
       require("mason").setup(opts)
 
       vim.defer_fn(function()
         local registry = require("mason-registry")
         local tools = {
-          "gopls", "ts_ls", "html", "cssls",
-          "goimports", "gofumpt", "prettier",
-          "eslint_d", "golangci-lint", -- ✅ Mason использует дефис
+          "gopls", "typescript-language-server", "html-lsp", "css-lsp", "lua-language-server",
+          "prettier", "eslint_d", "golangci-lint",
         }
+        local installed = 0
         for _, tool in ipairs(tools) do
           local ok, pkg = pcall(registry.get_package, tool)
           if ok and not pkg:is_installed() then
-            vim.notify("Mason: installing " .. tool, vim.log.levels.INFO)
             pkg:install()
+            installed = installed + 1
           end
+        end
+        if installed > 0 then
+          vim.notify("Mason: installing " .. installed .. " tools...", vim.log.levels.INFO)
         end
       end, 1000)
     end,
@@ -39,18 +38,16 @@ return {
     event = "VeryLazy",
     config = function()
       local lint = require("lint")
-
       lint.linters_by_ft = {
-        go = { "golangcilint" }, -- ✅ nvim-lint использует имя без дефиса
+        go = { "golangcilint" },
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
       }
-
       vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         callback = function()
-          if vim.bo.buflisted and vim.fn.line("$") <= 5000 then
+          if vim.bo.buflisted and vim.api.nvim_buf_line_count(0) <= 10000 then
             pcall(lint.try_lint)
           end
         end,
@@ -59,32 +56,23 @@ return {
   },
 
   -- ====================== BLINK.CMP ======================
-
-  -- ====================== BLINK.CMP ======================
   {
     "saghen/blink.cmp",
     version = "1.*",
     event = "InsertEnter",
     dependencies = { "rafamadriz/friendly-snippets" },
     opts = function()
-      -- ✅ Локальная функция, видна только внутри этого спека
       local function not_in_string()
         local ok, node = pcall(vim.treesitter.get_node, { ignore_injections = true })
         if not ok or not node then return true end
         local t = node:type()
-        return t ~= "string"
-          and t ~= "string_content"
-          and t ~= "interpreted_string_literal"
-          and t ~= "interpreted_string_literal_content"
-          and t ~= "raw_string_literal"
-          and t ~= "raw_string_literal_content"
-          and t ~= "comment"
+        return not (t:match("string") or t:match("comment") or
+                   t == "jsx_attribute_value" or t == "template_string")
       end
 
       return {
         keymap = { preset = "super-tab" },
         appearance = { nerd_font_variant = "mono" },
-
         sources = {
           default = { "lsp", "path", "snippets", "buffer" },
           providers = {
@@ -93,25 +81,24 @@ return {
             buffer   = { enabled = not_in_string },
           },
         },
-
         completion = {
           trigger = { show_on_trigger_character = true },
+          ghost_text = { enabled = true },
+          list = { selection = { preselect = false, auto_insert = false } },
+          menu = { border = "rounded" },
+          accept = { auto_brackets = { enabled = false } },
           documentation = {
             auto_show = true,
             auto_show_delay_ms = 200,
             window = { border = "rounded" },
           },
-          ghost_text = { enabled = false },
-          list = { selection = { preselect = false, auto_insert = false } },
-          menu = { border = "rounded" },
-          accept = { auto_brackets = { enabled = false } },
         },
-
         signature = { enabled = true, window = { border = "rounded" } },
         fuzzy = { implementation = "prefer_rust" },
       }
     end,
   },
+
   -- ====================== LSP CONFIG ======================
   {
     "neovim/nvim-lspconfig",
@@ -121,26 +108,61 @@ return {
       vim.diagnostic.config({
         virtual_text = { prefix = "●", spacing = 2 },
         underline = true,
+        update_in_insert = false,
+        severity_sort = true,
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = "󰅚",
-            [vim.diagnostic.severity.WARN]  = "󰀪",
-            [vim.diagnostic.severity.INFO]  = "󰌵",
-            [vim.diagnostic.severity.HINT]  = "󰌶",
+            [vim.diagnostic.severity.WARN] = "󰀪",
+            [vim.diagnostic.severity.INFO] = "󰌵",
+            [vim.diagnostic.severity.HINT] = "󰌶",
           },
         },
-        update_in_insert = false,
-        severity_sort = true,
         float = { border = "rounded", source = true, header = "", prefix = "" },
       })
 
+      vim.filetype.add({ extension = { gowork = "gowork", gotmpl = "gotmpl" } })
+
       local capabilities = require("blink.cmp").get_lsp_capabilities()
-      vim.lsp.config("*", { capabilities = capabilities })
 
-      vim.filetype.add({
-        extension = { gowork = "gowork", gotmpl = "gotmpl" },
-      })
+      local servers = {
+        gopls = {
+          capabilities = capabilities,
+          settings = {
+            gopls = {
+              gofumpt = true,
+              staticcheck = true,
+              semanticTokens = true,
+              analyses = { unusedparams = true, shadow = true, nilness = true },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                constantValues = true,
+                parameterNames = true,
+              },
+            },
+          },
+        },
+        ts_ls = { capabilities = capabilities, single_file_support = true },
+        html = { capabilities = capabilities },
+        cssls = { capabilities = capabilities },
+        lua_ls = {
+          capabilities = capabilities,
+          settings = {
+            Lua = {
+              diagnostics = { globals = { "vim" } },
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            },
+          },
+        },
+      }
 
+      for name, cfg in pairs(servers) do
+        vim.lsp.config(name, cfg)
+      end
+
+      -- Keymaps + полное отключение LSP-форматирования и willSave
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
         callback = function(args)
@@ -148,9 +170,13 @@ return {
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
 
-          -- Отключаем форматирование LSP (работает conform.nvim)
+          -- 🔧 Блокируем любые попытки LSP лезть в сохранение/форматирование
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
+          if client.server_capabilities.textDocumentSync then
+            client.server_capabilities.textDocumentSync.willSave = false
+            client.server_capabilities.textDocumentSync.willSaveWaitUntil = false
+          end
 
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
@@ -167,43 +193,15 @@ return {
           map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
           map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
           map("n", "<leader>ih", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
+            vim.lsp.inlay_hint.enable(
+              not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }),
+              { bufnr = bufnr }
+            )
           end, "Toggle Inlay Hints")
         end,
       })
 
-      vim.lsp.config("gopls", {
-        settings = {
-          gopls = {
-            gofumpt = true,
-            staticcheck = true,
-            analyses = { unusedparams = true, shadow = true, nilness = true },
-            -- в lsp.lua, внутри vim.lsp.config("gopls", {...})
-            semanticTokens = true,
-            hints = {
-              assignVariableTypes = true,
-              compositeLiteralFields = true,
-              constantValues = true,
-              parameterNames = true,
-            },
-          },
-        },
-      })
-
-      vim.lsp.config("ts_ls", { single_file_support = true })
-      vim.lsp.config("html", {})
-      vim.lsp.config("cssls", {})
-      vim.lsp.config("lua_ls", {
-        settings = {
-          Lua = {
-            diagnostics = { globals = { "vim" } },
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-          },
-        },
-      })
-
-      vim.lsp.enable({ "gopls", "ts_ls", "html", "cssls", "lua_ls" })
+      vim.lsp.enable(vim.tbl_keys(servers))
     end,
   },
 }
