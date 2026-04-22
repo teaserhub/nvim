@@ -20,6 +20,5 @@
   "onedark.nvim": { "branch": "master", "commit": "df4792accde9db0043121f32628bcf8e645d9aea" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
   "trouble.nvim": { "branch": "main", "commit": "bd67efe408d4816e25e8491cc5ad4088e708a69a" },
-  "yazi.nvim": { "branch": "main", "commit": "d34b366517a21fb2366e8ac393fc903008345173" },
-  "zen-mode.nvim": { "branch": "main", "commit": "8564ce6d29ec7554eb9df578efa882d33b3c23a7" }
+  "yazi.nvim": { "branch": "main", "commit": "d34b366517a21fb2366e8ac393fc903008345173" }
 }
