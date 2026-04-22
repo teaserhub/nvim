@@ -10,7 +10,7 @@ opt.signcolumn = "yes"    -- колонка для значков (гит, ли�
 opt.wrap = false          -- не переносить длинные строки
 opt.scrolloff = 8         -- отступ от края при скролле
 opt.termguicolors = true  -- 24-bit цвета (нужно для onedark)
-opt.laststatus = 3        -- глобальный статуслайн (один на все окна)
+opt.laststatus = 0       -- глобальный статуслайн (один на все окна)
 opt.cmdheight = 1         -- высота командной строки
 
 -- ✅ Убираем паддинги

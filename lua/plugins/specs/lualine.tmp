@@ -5,8 +5,9 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     options = {
-      theme = "onedark",
+      theme = "auto",
       globalstatus = true,
+      transparent = true,
       component_separators = { left = "", right = "" },
       section_separators = { left = "", right = "" },
       disabled_filetypes = { "oil", "yazi", "Trouble", "lazy", "mason" },
