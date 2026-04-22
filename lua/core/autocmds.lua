@@ -218,28 +218,6 @@ aucmd("BufEnter", {
     end,
 })
 
--- Автоформатирование при сохранении
--- aucmd("BufWritePre", {
---     group    = G.editing,
---     desc     = "Format on save via LSP",
---     callback = function()
---         local bo = vim.bo
---         if bo.buftype == "" and bo.filetype ~= "" then
---             vim.lsp.buf.format({ async = false, timeout_ms = 2000 })
---         end
---     end,
--- })
-
--- aucmd("InsertLeave", {
---     group    = G.editing,
---     desc     = "Format on InsertLeave",
---     callback = function()
---         local bo = vim.bo
---         if bo.buftype == "" and bo.filetype ~= "" then
---             vim.lsp.buf.format({ async = false, timeout_ms = 2000 })
---         end
---     end,
--- })
 
 -- =============================================================================
 -- 6. КАСТОМНЫЕ HIGHLIGHTS (treesitter-совместимые)
