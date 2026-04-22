@@ -305,8 +305,9 @@ aucmd("InsertLeave", {
 
 local function apply_highlights()
     -- Treesitter захватчики (@-синтаксис, актуальный для nvim-treesitter v0.9+)
+
     local hls = {
-        ["@function"]         = { fg = "#61afef", bold = true },
+        ["@function"]         = { fg = "#61afef" },
         ["@function.call"]    = { fg = "#56b6c2" },
         ["@function.method"]  = { fg = "#61afef" },
         ["@type"]             = { fg = "#e5c07b" },
@@ -316,18 +317,24 @@ local function apply_highlights()
         ["@string"]           = { fg = "#98c379" },
         ["@string.escape"]    = { fg = "#56b6c2" },
         ["@comment"]          = { fg = "#5c6370", italic = true },
-        ["@variable"]         = { fg = "#abb2bf" },
+        ["@variable"]         = { fg = "#e06c75" },
         ["@variable.builtin"] = { fg = "#e06c75", italic = true },
-        ["@parameter"]        = { fg = "#e06c75" },      -- deprecated → @variable.parameter
-        ["@variable.parameter"] = { fg = "#e06c75" },   -- новый захватчик (TS v0.9+)
-        ["@field"]            = { fg = "#e5c07b" },      -- deprecated → @variable.member
-        ["@variable.member"]  = { fg = "#e5c07b" },      -- новый захватчик
+        ["@parameter"]        = { fg = "#e06c75" },
+        ["@variable.parameter"] = { fg = "#e06c75" },
+        ["@field"]            = { fg = "#e5c07b" },
+        ["@variable.member"]  = { fg = "#e5c07b" },
         ["@constant"]         = { fg = "#d19a66" },
         ["@constant.builtin"] = { fg = "#d19a66", bold = true },
         ["@operator"]         = { fg = "#56b6c2" },
         ["@punctuation.bracket"] = { fg = "#abb2bf" },
-    }
 
+        -- 🟦 LSP Semantic Tokens (gopls)
+        ["@lsp.type.variable.go"]          = { fg = "#e06c75" },
+        ["@lsp.typemod.variable.local.go"] = { fg = "#e06c75" },
+        ["@lsp.typemod.variable.global.go"]= { fg = "#e06c75" },
+        ["@lsp.type.parameter.go"]         = { fg = "#e06c75" },
+        ["@lsp.type.namespace.go"]         = { fg = "#56b6c2",},
+    }
     for name, val in pairs(hls) do
         api.nvim_set_hl(0, name, val)
     end

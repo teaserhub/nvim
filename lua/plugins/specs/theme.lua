@@ -13,7 +13,7 @@ return {
   config = function()
     require("onedark").setup({
       style = "darker",
-      transparent = false,
+      transparent = true,
       term_colors = true,           -- ✅ Исправлено: официальное имя опции
       ending_tildes = false,        -- ✅ Убирает визуальный шум "~" в пустых строках
       lualine = { transparent = false }, -- ✅ Бесшовная интеграция с lualine
@@ -39,12 +39,12 @@ return {
         StatusLine = { bg = "#282c34", fg = "#abb2bf" },
         CursorLine = { bg = "#2c313c" },
         IncSearch = { bg = "#e5c07b", fg = "#282c34", style = "bold" },
-        
-        -- 🌿 Современные Treesitter/LSP группы (Neovim 0.10+)
-        ["@comment"] = { fg = "#5c6370", style = "italic" },
-        ["@keyword"] = { fg = "#c678dd", style = "italic" },
-        ["@function"] = { fg = "#61afef" },
-        ["@variable"] = { fg = "#e06c75" },
+
+        -- -- 🌿 Современные Treesitter/LSP группы (Neovim 0.10+)
+        -- ["@comment"] = { fg = "#5c6370", style = "italic" },
+        -- ["@keyword"] = { fg = "#c678dd", style = "italic" },
+        -- ["@function"] = { fg = "#61afef" },
+        -- ["@variable"] = { fg = "#e06c75" },
       },
     })
 

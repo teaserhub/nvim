@@ -178,6 +178,8 @@ return {
             gofumpt = true,
             staticcheck = true,
             analyses = { unusedparams = true, shadow = true, nilness = true },
+            -- в lsp.lua, внутри vim.lsp.config("gopls", {...})
+            semanticTokens = true,
             hints = {
               assignVariableTypes = true,
               compositeLiteralFields = true,
