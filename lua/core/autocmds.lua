@@ -51,16 +51,6 @@ aucmd("TextYankPost", {
 -- 2. AUTOSAVE
 -- =============================================================================
 
--- При выходе из Insert mode
-aucmd("InsertLeave", {
-    group    = G.autosave,
-    desc     = "Autosave on InsertLeave",
-    callback = function()
-        if is_saveable() then
-            vim.cmd("silent! update")
-        end
-    end,
-})
 
 -- При потере фокуса окном Neovim
 aucmd("FocusLost", {
@@ -73,16 +63,7 @@ aucmd("FocusLost", {
     end,
 })
 
--- При переключении на другой буфер (удобно при работе с несколькими файлами)
-aucmd("BufLeave", {
-    group    = G.autosave,
-    desc     = "Autosave on BufLeave",
-    callback = function()
-        if is_saveable() then
-            vim.cmd("silent! update")
-        end
-    end,
-})
+
 
 -- Перед выходом из Neovim — сохраняем всё
 aucmd("VimLeavePre", {
@@ -93,45 +74,7 @@ aucmd("VimLeavePre", {
     end,
 })
 
--- Таймер-автосохранение каждые 30 секунд (разумный интервал, не каждые 3)
--- Используем vim.uv (не vim.loop — deprecated с 0.10)
-do
-    local timer = uv.new_timer()
-    if timer then
-        timer:start(30000, 30000, vim.schedule_wrap(function()
-            -- Проверяем все буферы, не только текущий
-            for _, buf in ipairs(api.nvim_list_bufs()) do
-                if api.nvim_buf_is_loaded(buf) then
-                    local bo = vim.bo[buf]
-                    local name = api.nvim_buf_get_name(buf)
-                    if bo.modified
-                        and not bo.readonly
-                        and bo.buftype == ""
-                        and bo.filetype ~= ""
-                        and name ~= ""
-                    then
-                        -- pcall: на случай если файл удалён с диска
-                        pcall(api.nvim_buf_call, buf, function()
-                            vim.cmd("silent! update")
-                        end)
-                    end
-                end
-            end
-        end))
 
-        -- Чистим таймер при выходе из Neovim
-        aucmd("VimLeavePre", {
-            group    = G.autosave,
-            desc     = "Stop autosave timer",
-            callback = function()
-                if not timer:is_closing() then
-                    timer:stop()
-                    timer:close()
-                end
-            end,
-        })
-    end
-end
 
 -- =============================================================================
 -- 3. FILETYPES — настройки под конкретные языки
