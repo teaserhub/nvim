@@ -73,7 +73,7 @@ aucmd("VimLeavePre", {
         vim.cmd("silent! wall")
     end,
 })
-
+-- Автосохранение и форматирование
 aucmd("InsertLeave", {
     group = G.autosave,
     desc = "Autosave + Format on InsertLeave",
