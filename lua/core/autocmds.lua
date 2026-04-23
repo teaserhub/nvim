@@ -74,6 +74,18 @@ aucmd("VimLeavePre", {
     end,
 })
 
+aucmd("InsertLeave", {
+    group = G.autosave,
+    desc = "Autosave on InsertLeave",
+    callback = function()
+        if is_saveable() then
+            vim.cmd("silent! update")
+            -- ✅ noice.nvim покажет красивое уведомление
+            vim.notify("💾 Saved", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
+        end
+    end,
+})
+
 
 
 -- =============================================================================
