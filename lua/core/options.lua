@@ -66,27 +66,4 @@ opt.clipboard = "unnamedplus" -- системный буфер обмена
 -- =============================================================================
 opt.wildmode = "longest:full,full" -- умное автодополнение в cmdline
 
--- =============================================================================
---  Go-специфично
--- =============================================================================
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "go",
-    callback = function()
-        vim.opt_local.expandtab = false  -- в Go используются табы
-    end,
-})
 
--- -- ===== SPELL CHECKER: отключаем для кодинга =====
--- vim.opt.spell = false          -- глобально выключаем
--- vim.opt.spelllang = {}         -- сбрасываем языки
---
--- -- ===== Но если вдруг включится — отключаем в попапах =====
--- vim.api.nvim_create_autocmd({ "FileType", "WinEnter" }, {
---   callback = function()
---     local buf = vim.api.nvim_get_current_buf()
---     local bt = vim.api.nvim_get_option_value("buftype", { buf = buf })
---     if bt == "popup" or bt == "help" or vim.bo[buf].filetype:match("^lsp") then
---       vim.opt_local.spell = false
---     end
---   end,
--- })
