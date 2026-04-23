@@ -77,14 +77,13 @@ aucmd("VimLeavePre", {
 aucmd("InsertLeave", {
     group = G.autosave,
     desc = "Autosave + Format on InsertLeave",
-    callback = function()
-        if is_saveable() then
-            vim.cmd("silent! update")
-            -- ✅ Форматируем через conform, не через LSP
-            pcall(require("conform").format, { async = true, timeout_ms = 1000 })
-            vim.notify("💾 Saved + Formatted", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
-        end
-    end,
+callback = function()
+    if is_saveable() and vim.api.nvim_buf_line_count(0) <= 5000 then
+        vim.cmd("silent! update")
+        pcall(require("conform").format, { async = true, timeout_ms = 1000 })
+        vim.notify("💾 Saved + Formatted", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
+    end
+end,
 })
 
 
@@ -101,7 +100,7 @@ aucmd("FileType", {
         local has_gopls = vim.fn.executable("gopls") == 1
         local has_golangci = vim.fn.executable("golangci-lint") == 1
         if not has_gopls then
-            vim.notify("⚠ gopls not found. Install: go install golang.org/x/tools/gopls@latest", 
+            vim.notify("⚠ gopls not found. Install: go install golang.org/x/tools/gopls@latest",
                        vim.log.levels.WARN)
         end
         if not has_golangci then
