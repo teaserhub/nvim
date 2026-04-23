@@ -14,27 +14,27 @@ return {
   -- ═══════════════════════════════════════════════
   -- INDENTS: ibl + scope separation
   -- ═══════════════════════════════════════════════
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    main = "ibl",
-    opts = {
-      indent = { char = "┊", tab_char = "┊" },
-      scope = { enabled = false },
-
-      exclude = {
-        filetypes = disabled_ft,
-        buftypes = { "terminal", "nofile" },
-      },
-    },
-  },
+  -- {
+  --   "lukas-reineke/indent-blankline.nvim",
+  --   event = { "BufReadPost", "BufNewFile" },
+  --   main = "ibl",
+  --   opts = {
+  --     indent = { char = "┊", tab_char = "┊" },
+  --     scope = { enabled = false },
+  --
+  --     exclude = {
+  --       filetypes = disabled_ft,
+  --       buftypes = { "terminal", "nofile" },
+  --     },
+  --   },
+  -- },
 
   {
     "echasnovski/mini.indentscope",
     version = "*",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      symbol = "│",
+      symbol = "┊",
       options = { try_as_border = true },
 
       draw = {
