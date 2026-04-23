@@ -27,11 +27,16 @@ return {
             lua = { "stylua" },
         },
 
-        format_on_save = {
-            timeout_ms = 3000,
-            lsp_fallback = "never",
-            async = false,
-        },
+        -- ✅ format_on_save убран: форматирование запускается из core/autocmds.lua
+        -- в InsertLeave, чтобы не дублировать запуск форматтера.
+        -- Если нужно форматирование только при :w — раскомментируй и убери
+        -- pcall(conform.format) из autocmds.lua.
+        --
+        -- format_on_save = {
+        --     timeout_ms = 3000,
+        --     lsp_fallback = "never",
+        --     async = false,
+        -- },
 
         default_format_opts = {
             lsp_format = "never",
