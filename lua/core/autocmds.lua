@@ -93,6 +93,24 @@ aucmd("InsertLeave", {
 -- 3. FILETYPES — настройки под конкретные языки
 -- =============================================================================
 
+-- Проверка наличия Go-инструментов при открытии Go-файла
+aucmd("FileType", {
+    group = augrp("core_go_tools", { clear = true }),
+    pattern = "go",
+    callback = function()
+        local has_gopls = vim.fn.executable("gopls") == 1
+        local has_golangci = vim.fn.executable("golangci-lint") == 1
+        if not has_gopls then
+            vim.notify("⚠ gopls not found. Install: go install golang.org/x/tools/gopls@latest", 
+                       vim.log.levels.WARN)
+        end
+        if not has_golangci then
+            vim.notify("⚠ golangci-lint not found. Install: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest",
+                       vim.log.levels.WARN)
+        end
+    end,
+})
+
 -- Go: табы, ширина, LSP
 aucmd("FileType", {
     group    = G.filetypes,
