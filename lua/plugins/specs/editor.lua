@@ -12,23 +12,8 @@ local disabled_ft = {
 
 return {
   -- ═══════════════════════════════════════════════
-  -- INDENTS: ibl + scope separation
+  -- MINI.INDENTSCOPE
   -- ═══════════════════════════════════════════════
-  -- {
-  --   "lukas-reineke/indent-blankline.nvim",
-  --   event = { "BufReadPost", "BufNewFile" },
-  --   main = "ibl",
-  --   opts = {
-  --     indent = { char = "┊", tab_char = "┊" },
-  --     scope = { enabled = false },
-  --
-  --     exclude = {
-  --       filetypes = disabled_ft,
-  --       buftypes = { "terminal", "nofile" },
-  --     },
-  --   },
-  -- },
-
   {
     "echasnovski/mini.indentscope",
     version = "*",
@@ -36,12 +21,10 @@ return {
     opts = {
       symbol = "┊",
       options = { try_as_border = true },
-
       draw = {
-        delay = 50, -- ❗ FIX: убран 0 → меньше redraw jitter
+        delay = 50,
       },
     },
-
     init = function()
       vim.api.nvim_create_autocmd("FileType", {
         pattern = disabled_ft,
@@ -59,17 +42,12 @@ return {
     "echasnovski/mini.pairs",
     version = "*",
     event = "InsertEnter",
-
     opts = {
       modes = { insert = true, command = true, terminal = false },
-
       skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-skip_ts         = { "string", "comment" }, -- ✅ вернуть
-      -- ❗ FIX: убрали markdown из skip_ft
+      skip_ts = { "string", "comment" },
       skip_ft = { "gitcommit", "help", "log" },
-
       skip_unbalanced = true,
-
       mappings = {
         ["`"] = { action = "open", pair = "``", neigh_pattern = "[^\\]`" },
       },
@@ -77,12 +55,11 @@ skip_ts         = { "string", "comment" }, -- ✅ вернуть
   },
 
   -- ═══════════════════════════════════════════════
-  -- SURROUND
+  -- MINI.SURROUND
   -- ═══════════════════════════════════════════════
   {
     "echasnovski/mini.surround",
     version = "*",
-
     keys = {
       { "sa", mode = { "n", "v" }, desc = "Surround add" },
       { "sd", mode = { "n", "v" }, desc = "Surround delete" },
@@ -92,7 +69,6 @@ skip_ts         = { "string", "comment" }, -- ✅ вернуть
       { "sh", desc = "Surround highlight" },
       { "sn", desc = "Surround update n_lines" },
     },
-
     opts = {
       mappings = {
         add = "sa",
@@ -113,13 +89,10 @@ skip_ts         = { "string", "comment" }, -- ✅ вернуть
   {
     "echasnovski/mini.ai",
     version = "*",
-
-    -- ❗ FIX: вместо VeryLazy → keys (правильный lazy)
     keys = {
       { "a", mode = { "x", "o" } },
       { "i", mode = { "x", "o" } },
     },
-
     opts = {
       n_lines = 500,
     },
@@ -131,47 +104,22 @@ skip_ts         = { "string", "comment" }, -- ✅ вернуть
   {
     "echasnovski/mini.move",
     version = "*",
-
-    -- ❗ FIX: keys вместо VeryLazy
-keys = {
-    { "<M-h>", mode = { "n", "v" } },
-    { "<M-j>", mode = { "n", "v" } },
-    { "<M-k>", mode = { "n", "v" } },
-    { "<M-l>", mode = { "n", "v" } },
-},
-
+    keys = {
+      { "<M-h>", mode = { "n", "v" } },
+      { "<M-j>", mode = { "n", "v" } },
+      { "<M-k>", mode = { "n", "v" } },
+      { "<M-l>", mode = { "n", "v" } },
+    },
     opts = {
       mappings = {
         left = "<M-h>",
         right = "<M-l>",
         down = "<M-j>",
         up = "<M-k>",
-
         line_left = "<M-h>",
         line_right = "<M-l>",
         line_down = "<M-j>",
         line_up = "<M-k>",
-      },
-    },
-  },
-
-  -- ═══════════════════════════════════════════════
-  -- SPLITJOIN
-  -- ═══════════════════════════════════════════════
-  {
-    "echasnovski/mini.splitjoin",
-    version = "*",
-
-    keys = {
-      { "gS", desc = "Split structure" },
-      { "gJ", desc = "Join structure" },
-    },
-
-    opts = {
-      mappings = {
-        toggle = "",
-        split = "gS",
-        join = "gJ",
       },
     },
   },
