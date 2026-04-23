@@ -5,39 +5,37 @@
 
 return {
     -- ====================== MASON ======================
-    {
-        "mason-org/mason.nvim", -- ✅ официальный репо (перенесён из williamboman)
-        cmd  = "Mason",
-        opts = { ui = { border = "rounded" } },
-        config = function(_, opts)
-            require("mason").setup(opts)
-
-            vim.defer_fn(function()
+{
+    "mason-org/mason.nvim",
+    cmd = "Mason",
+    opts = { ui = { border = "rounded" } },
+    config = function(_, opts)
+        require("mason").setup(opts)
+        
+        -- Автоустановка только для JS/Web тулзов
+        -- Go-инструменты ставь через go install (быстрее и надёжнее)
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "MasonUpdateCompleted",
+            callback = function()
                 local registry = require("mason-registry")
                 local tools = {
-                    "gopls",
                     "typescript-language-server",
                     "html-lsp",
                     "css-lsp",
                     "lua-language-server",
                     "prettier",
                     "eslint_d",
-                    "golangci-lint",
                 }
-                local installed = 0
                 for _, tool in ipairs(tools) do
                     local ok, pkg = pcall(registry.get_package, tool)
                     if ok and not pkg:is_installed() then
                         pkg:install()
-                        installed = installed + 1
                     end
                 end
-                if installed > 0 then
-                    vim.notify("Mason: installing " .. installed .. " tools...", vim.log.levels.INFO)
-                end
-            end, 1000)
-        end,
-    },
+            end,
+        })
+    end,
+},
 
     -- ====================== NVIM-LINT ======================
     {
