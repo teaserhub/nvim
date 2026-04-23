@@ -93,7 +93,7 @@ return {
       h(0, "ModeInsert",   { fg = "#98c379", bg = "NONE", bold = true })
       h(0, "ModeVisual",   { fg = "#e5c07b", bg = "NONE", bold = true })
       h(0, "ModeOther",    { fg = "#56b6c2", bg = "NONE" })
-      h(0, "StatusLinePos",{ fg = "#56b6c2", bg = "NONE" })
+      h(0, "StatusLinePos",{ fg = "#cdd6f4", bg = "NONE" })
       h(0, "DiagErr",      { fg = "#e06c75", bg = "NONE" })
       h(0, "DiagWarn",     { fg = "#e5c07b", bg = "NONE" })
     end
