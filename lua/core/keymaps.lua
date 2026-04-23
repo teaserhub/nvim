@@ -14,7 +14,22 @@ map("n", "<leader>q", "<cmd>q<cr>")
 
 -- Показать ошибку под курсором (всплывающее окно)
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic float" })
+-- Логи (Neovim 0.12)
+map("n", "<leader>ll", function()
+    vim.cmd("edit " .. vim.lsp.get_log_path())
+end, { desc = "LSP log" })
 
+map("n", "<leader>lc", "<cmd>ConformInfo<cr>", { desc = "Conform info" })
+
+map("n", "<leader>lm", function()
+    vim.cmd("edit " .. vim.fn.stdpath("state") .. "/mason.log")
+end, { desc = "Mason log" })
+
+map("n", "<leader>ln", "<cmd>NoiceHistory<cr>", { desc = "Noice history" })
+
+map("n", "<leader>lz", "<cmd>Lazy<cr>l", { desc = "Lazy log" })
+
+map("n", "<leader>msg", "<cmd>messages<cr>", { desc = "Messages" })
 -- Buffer context
 map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<S-Tab>", ":bprevious<CR>", { desc = "Previous buffer" })
@@ -89,58 +104,4 @@ map("n", "<C-f>", "<cmd>FzfLua files<cr>", { desc = "Поиск файлов" })
 -- 🔹 Ctrl+H: Заменить (открывает fzf live_grep)
 map("n", "<C-g>", "<cmd>FzfLua live_grep<cr>", { desc = "Поиск по тексту" })
 
--- ============================================
--- ЗАМЕНА WHICH-KEY: Просмотр всех маппингов по <Leader>?
--- ============================================
-local function show_keymaps()
-    local maps = vim.api.nvim_get_keymap("n") -- только normal mode
-    local lines = {}
 
-    for _, map in ipairs(maps) do
-        local lhs = map.lhs
-        local desc = map.desc or ""
-        local rhs = map.rhs or ""
-
-        -- Фильтруем мусор: убираем <Plug> маппинги и пустые
-        if lhs:sub(2, 6) ~= "<Plug>" and lhs ~= "" then
-            -- Форматируем красиво: "Space f f  →  Find Files"
-            local display_lhs = lhs:gsub("<Leader>", "Space ")
-            local display_desc = desc ~= "" and desc or rhs:gsub("<Cmd>", ""):gsub("<CR>", "")
-
-            if display_desc ~= "" then
-                table.insert(lines, string.format("%-19s → %s", display_lhs, display_desc))
-            end
-        end
-    end
-
-    -- Сортируем для читаемости
-    table.sort(lines)
-
-    -- Отправляем в fzf-lua (если он есть)
-    local ok, fzf = pcall(require, "fzf-lua")
-    if ok then
-        fzf.fzf_exec(lines, {
-            prompt = "🗺️  Keymaps (Normal Mode) > ",
-            winopts = { height = 1.5, width = 0.6, row = 0.5, col = 0.5 },
-            actions = {
-                -- При нажатии Enter — выполняем команду (извлекаем оригинальный lhs)
-                default = function(selected)
-                    local lhs = selected[2]:match("^(%S+)"):gsub("Space ", "<Leader>")
-                    vim.cmd("normal! " .. lhs)
-                end
-            }
-        })
-    else
-        -- Fallback: если fzf-lua нет, просто выводим в буфер
-        vim.cmd("new")
-        vim.api.nvim_buf_set_lines(1, 0, -1, false, lines)
-        vim.bo.buftype = "nofile"
-        vim.bo.modifiable = false
-    end
-end
-
--- Вешаем на <Leader>?
-vim.keymap.set("n", "<Leader>?", show_keymaps, { desc = "Show all keymaps" })
-
--- (Опционально) Можно повесить и на команду :Maps
-vim.api.nvim_create_user_command("Maps", show_keymaps, {})

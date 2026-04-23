@@ -7,6 +7,7 @@ return {
         { "<leader>ff", "<cmd>FzfLua files<CR>", desc = "Find Files" },
         { "<leader>fg", "<cmd>FzfLua live_grep<CR>", desc = "Live Grep" },
         { "<leader>fb", "<cmd>FzfLua buffers<CR>", desc = "Buffers" },
+        { "<leader>?", "<cmd>FzfLua keymaps<cr>", desc = "Keymaps" },
     },
     opts = {
         fzf_opts = { ["--layout"] = "reverse" },
