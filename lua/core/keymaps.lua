@@ -12,6 +12,9 @@ map('i', 'jj', '<Esc>')
 map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>q", "<cmd>q<cr>")
 
+-- Показать ошибку под курсором (всплывающее окно)
+map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic float" })
+
 -- Buffer context
 map("n", "<Tab>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<S-Tab>", ":bprevious<CR>", { desc = "Previous buffer" })
