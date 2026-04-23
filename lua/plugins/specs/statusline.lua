@@ -106,7 +106,6 @@ return {
       callback = set_hls,
     })
 
-    vim.o.laststatus = 2
     vim.o.showmode   = false
   end,
 }
