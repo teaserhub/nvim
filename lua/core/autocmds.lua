@@ -76,12 +76,13 @@ aucmd("VimLeavePre", {
 
 aucmd("InsertLeave", {
     group = G.autosave,
-    desc = "Autosave on InsertLeave",
+    desc = "Autosave + Format on InsertLeave",
     callback = function()
         if is_saveable() then
             vim.cmd("silent! update")
-            -- ✅ noice.nvim покажет красивое уведомление
-            vim.notify("💾 Saved", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
+            -- ✅ Форматируем через conform, не через LSP
+            pcall(require("conform").format, { async = true, timeout_ms = 1000 })
+            vim.notify("💾 Saved + Formatted", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
         end
     end,
 })
