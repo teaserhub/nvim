@@ -83,18 +83,6 @@ aucmd("InsertLeave", {
         end
     end,
 })
--- aucmd("InsertLeave", {
---     group = G.autosave,
---     desc = "Autosave + Format on InsertLeave",
--- callback = function()
---     if is_saveable() and vim.api.nvim_buf_line_count(0) <= 5000 then
---         vim.cmd("silent! update")
---         pcall(require("conform").format, { async = true, timeout_ms = 1000 })
---         vim.notify("💾 Saved + Formatted", vim.log.levels.INFO, { title = "AutoSave", timeout = 800 })
---     end
--- end,
--- })
-
 
 
 -- =============================================================================

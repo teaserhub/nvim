@@ -104,4 +104,43 @@ map("n", "<C-f>", "<cmd>FzfLua files<cr>", { desc = "Поиск файлов" })
 -- 🔹 Ctrl+H: Заменить (открывает fzf live_grep)
 map("n", "<C-g>", "<cmd>FzfLua live_grep<cr>", { desc = "Поиск по тексту" })
 
+map("n", "<leader>sm", function()
+    vim.notify([[
+mini.ai:       yaf/cif/daf
 
+mini.move:     Alt+j/k/l/h
+mini.pairs:    () [] {} "" '' `` auto
+mini.surround: sa(add) sd(delete) sr(replace)
+mini.comment:  gcc  gc(visual)
+    ]], vim.log.levels.INFO, { title = "Mini Plugins Help" })
+end, { desc = "Mini plugins help" })
+
+map("n", "<leader>h", function()
+    vim.notify([[
+  N A V I G A T I O N
+  ────────────────────
+  s → Flash jump (слово)
+  S → Flash treesitter
+  <C-f> → Файлы
+  <C-g> → Grep
+  <Tab> → Буферы
+  <C-hjkl> → Сплиты
+  ]d/[d → Ошибки
+  gd → Определение
+  Alt+hjkl → Двигать строки
+
+  E D I T I N G
+  ────────────────────
+  <C-d/u> → Дублировать
+  <leader>ca → Code action
+  gcc → Комментировать
+  sa/sd/sr → Surround
+  yaf → Yank функцию
+    ]], vim.log.levels.INFO, { title = "⌨ Help" })
+end, { desc = "Help" })
+
+-- В keymaps.lua
+map("i", "<End>", "<C-o>$", { desc = "End of line" })
+map("i", "<C-End>", "<C-o>$", { desc = "End of line" })
+map("n", "<End>", "$", { desc = "End of line" })
+map("v", "<End>", "$", { desc = "End of line" })
