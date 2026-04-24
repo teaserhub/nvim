@@ -17,14 +17,104 @@
     ],
     "description": "HTTP handler method on struct"
   },
+  "HTTP Middleware": {
+    "prefix": "mw",
+    "body": [
+      "func ${1:name}(next http.Handler) http.Handler {",
+      "\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {",
+      "\t\t$0",
+      "\t\tnext.ServeHTTP(w, r)",
+      "\t})",
+      "}"
+    ],
+    "description": "HTTP middleware (pre-hook)"
+  },
+  "HTTP Server": {
+    "prefix": "srv",
+    "body": [
+      "mux := http.NewServeMux()",
+      "mux.HandleFunc(\"${1:GET} ${2:/path}\", ${3:handler})",
+      "",
+      "srv := &http.Server{",
+      "\tAddr:         \"${4::8080}\",",
+      "\tHandler:      mux,",
+      "\tReadTimeout:  5 * time.Second,",
+      "\tWriteTimeout: 10 * time.Second,",
+      "}",
+      "",
+      "if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {",
+      "\tlog.Fatal(err)",
+      "}"
+    ],
+    "description": "HTTP server — ErrServerClosed safe"
+  },
+  "HTTP Request": {
+    "prefix": "hreq",
+    "body": [
+      "req, err := http.NewRequestWithContext(ctx, \"${1:GET}\", ${2:url}, ${3:nil})",
+      "if err != nil {",
+      "\treturn fmt.Errorf(\"create request: %w\", err)",
+      "}",
+      "req.Header.Set(\"Content-Type\", \"application/json\")",
+      "",
+      "resp, err := http.DefaultClient.Do(req)",
+      "if err != nil {",
+      "\treturn fmt.Errorf(\"do request: %w\", err)",
+      "}",
+      "defer resp.Body.Close()"
+    ],
+    "description": "HTTP request with context"
+  },
   "JSON Response": {
     "prefix": "jsonw",
     "body": [
       "w.Header().Set(\"Content-Type\", \"application/json\")",
       "w.WriteHeader(${1:http.StatusOK})",
-      "json.NewEncoder(w).Encode(${2:data})"
+      "if err := json.NewEncoder(w).Encode(${2:data}); err != nil {",
+      "\tslog.Error(\"encode response\", \"err\", err)",
+      "}"
     ],
-    "description": "Write JSON response"
+    "description": "Write JSON response with error log"
+  },
+  "JSON Decode Body": {
+    "prefix": "decode",
+    "body": [
+      "var ${1:req} ${2:RequestType}",
+      "if err := json.NewDecoder(r.Body).Decode(&${1:req}); err != nil {",
+      "\thttp.Error(w, \"invalid request body\", http.StatusBadRequest)",
+      "\treturn",
+      "}"
+    ],
+    "description": "Decode JSON request body — частый паттерн в хендлерах"
+  },
+  "JSON Marshal": {
+    "prefix": "jm",
+    "body": [
+      "b, err := json.Marshal(${1:v})",
+      "if err != nil {",
+      "\treturn fmt.Errorf(\"marshal: %w\", err)",
+      "}"
+    ],
+    "description": "json.Marshal with error"
+  },
+  "JSON Unmarshal": {
+    "prefix": "ju",
+    "body": [
+      "if err := json.Unmarshal(${1:data}, &${2:v}); err != nil {",
+      "\treturn fmt.Errorf(\"unmarshal: %w\", err)",
+      "}"
+    ],
+    "description": "json.Unmarshal with error"
+  },
+  "Read Response Body": {
+    "prefix": "readbody",
+    "body": [
+      "body, err := io.ReadAll(resp.Body)",
+      "if err != nil {",
+      "\treturn fmt.Errorf(\"read body: %w\", err)",
+      "}"
+    ],
+    "description": "io.ReadAll response body"
   },
   "Error Response": {
     "prefix": "httperr",
@@ -53,33 +143,12 @@
     ],
     "description": "if err != nil { http.Error + return }"
   },
-  "Main Function": {
-    "prefix": "main",
+  "Fmt Errorf": {
+    "prefix": "fe",
     "body": [
-      "func main() {",
-      "\t$0",
-      "}"
+      "fmt.Errorf(\"${1:context}: %w\", ${2:err})"
     ],
-    "description": "main function"
-  },
-  "HTTP Server": {
-    "prefix": "srv",
-    "body": [
-      "mux := http.NewServeMux()",
-      "mux.HandleFunc(\"${1:GET} ${2:/path}\", ${3:handler})",
-      "",
-      "srv := &http.Server{",
-      "\tAddr:         \"${4::8080}\",",
-      "\tHandler:      mux,",
-      "\tReadTimeout:  5 * time.Second,",
-      "\tWriteTimeout: 10 * time.Second,",
-      "}",
-      "",
-      "if err := srv.ListenAndServe(); err != nil {",
-      "\tlog.Fatal(err)",
-      "}"
-    ],
-    "description": "HTTP server with mux"
+    "description": "fmt.Errorf with %w wrap"
   },
   "Struct": {
     "prefix": "st",
@@ -100,13 +169,29 @@
     "description": "interface definition"
   },
   "Goroutine": {
-    "prefix": "go",
+    "prefix": "gor",
     "body": [
       "go func() {",
       "\t$0",
       "}()"
     ],
-    "description": "goroutine"
+    "description": "anonymous goroutine (было 'go' — конфликт с keyword в некоторых движках)"
+  },
+  "Errgroup": {
+    "prefix": "eg",
+    "body": [
+      "g, ctx := errgroup.WithContext(${1:context.Background()})",
+      "",
+      "g.Go(func() error {",
+      "\t$0",
+      "\treturn nil",
+      "})",
+      "",
+      "if err := g.Wait(); err != nil {",
+      "\treturn fmt.Errorf(\"${2:task}: %w\", err)",
+      "}"
+    ],
+    "description": "errgroup — горутины с обработкой ошибок (golang.org/x/sync)"
   },
   "Select": {
     "prefix": "sel",
@@ -118,7 +203,21 @@
       "\treturn ctx.Err()",
       "}"
     ],
-    "description": "select statement with context"
+    "description": "select with context"
+  },
+  "Select Default": {
+    "prefix": "seld",
+    "body": [
+      "select {",
+      "case ${1:v} := <-${2:ch}:",
+      "\t$0",
+      "case <-ctx.Done():",
+      "\treturn ctx.Err()",
+      "default:",
+      "\t// non-blocking",
+      "}"
+    ],
+    "description": "select non-blocking with default"
   },
   "Context With Cancel": {
     "prefix": "ctx",
@@ -136,19 +235,29 @@
     ],
     "description": "context with timeout"
   },
-  "Log Fatal": {
-    "prefix": "lf",
+  "Slog Info": {
+    "prefix": "si",
     "body": [
-      "log.Fatalf(\"${1:message}: %v\", ${2:err})"
+      "slog.Info(\"${1:message}\", \"${2:key}\", ${3:val})"
     ],
-    "description": "log.Fatalf"
+    "description": "slog.Info — structured logging (Go 1.21+)"
   },
-  "Fmt Errorf": {
-    "prefix": "fe",
+  "Slog Error": {
+    "prefix": "se",
     "body": [
-      "fmt.Errorf(\"${1:context}: %w\", ${2:err})"
+      "slog.Error(\"${1:message}\", \"err\", ${2:err})"
     ],
-    "description": "fmt.Errorf with %w wrap"
+    "description": "slog.Error — structured logging (Go 1.21+)"
+  },
+  "Slog Logger Init": {
+    "prefix": "sloginit",
+    "body": [
+      "logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{",
+      "\tLevel: slog.LevelInfo,",
+      "}))",
+      "slog.SetDefault(logger)"
+    ],
+    "description": "Init slog JSON handler — замена log.Printf/log.Fatalf"
   },
   "Test Function": {
     "prefix": "tf",
@@ -163,9 +272,9 @@
     "prefix": "tt",
     "body": [
       "tests := []struct {",
-      "\tname string",
+      "\tname  string",
       "\t${2:input} ${3:string}",
-      "\twant ${4:string}",
+      "\twant  ${4:string}",
       "}{",
       "\t{name: \"${5:case}\", ${2:input}: ${6:\"\"}, want: ${7:\"\"}},",
       "}",
@@ -176,6 +285,15 @@
       "\t})",
       "}"
     ],
-    "description": "table-driven test"
+    "description": "table-driven test — итератор tc, не tt (shadowing fix)"
+  },
+  "Main Function": {
+    "prefix": "mainfn",
+    "body": [
+      "func main() {",
+      "\t$0",
+      "}"
+    ],
+    "description": "main function"
   }
 }
