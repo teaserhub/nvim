@@ -177,6 +177,10 @@ return {
           map("gd",          vim.lsp.buf.definition,     "Goto Definition")
           map("gD",          vim.lsp.buf.declaration,    "Goto Declaration")
           map("K",           vim.lsp.buf.hover,          "Hover")
+          -- УДАЛИ эти три:
+          map("gi",  vim.lsp.buf.implementation, "Goto Implementation")  -- уже есть gri
+          map("gr",  vim.lsp.buf.references,     "References")           -- уже есть grr
+          map("gy",  vim.lsp.buf.type_definition,"Goto Type Definition") -- уже есть grt
           map("<leader>ca",  vim.lsp.buf.code_action,    "Code Action")
           map("<leader>rn",  vim.lsp.buf.rename,         "Rename")
           map("[d",          vim.diagnostic.goto_prev,   "Prev Diagnostic")
