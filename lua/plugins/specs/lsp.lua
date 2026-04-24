@@ -42,7 +42,7 @@ return {
     config = function()
       local lint = require("lint")
       lint.linters_by_ft = {
-        go = { "golangcilint" },
+        go = { "golangci-lint" },
       }
       vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         callback = function()
