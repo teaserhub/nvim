@@ -121,23 +121,20 @@ return {
       -- ✅ Регистрируем конфиги
       vim.lsp.config("gopls", {
         capabilities = capabilities,
+        root_dir = vim.fs.root(0, { "go.work", "go.mod", ".git" }),
         settings = {
           gopls = {
-            gofumpt     = true,
-            staticcheck = true,
-            -- semanticTokens: viewport-only в 0.12 — производительность стала лучше
+            gofumpt        = true,
+            staticcheck    = true,
             semanticTokens = true,
-            analyses = {
-              unusedparams = true,
-              shadow       = true,
-              nilness      = true,
-            },
+            analyses       = { unusedparams = true, shadow = true, nilness = true },
             hints = {
               assignVariableTypes    = true,
               compositeLiteralFields = true,
               constantValues         = true,
               parameterNames         = true,
             },
+            directoryFilters = { "-.git", "-node_modules" }, -- ✅ не индексировать мусор
           },
         },
       })
@@ -180,9 +177,6 @@ return {
           map("gd",          vim.lsp.buf.definition,     "Goto Definition")
           map("gD",          vim.lsp.buf.declaration,    "Goto Declaration")
           map("K",           vim.lsp.buf.hover,          "Hover")
-          map("gi",          vim.lsp.buf.implementation, "Goto Implementation")
-          map("gr",          vim.lsp.buf.references,     "References")
-          map("gy",          vim.lsp.buf.type_definition,"Goto Type Definition")
           map("<leader>ca",  vim.lsp.buf.code_action,    "Code Action")
           map("<leader>rn",  vim.lsp.buf.rename,         "Rename")
           map("[d",          vim.diagnostic.goto_prev,   "Prev Diagnostic")
