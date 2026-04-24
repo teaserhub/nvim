@@ -144,3 +144,32 @@ map("i", "<End>", "<C-o>$", { desc = "End of line" })
 map("i", "<C-End>", "<C-o>$", { desc = "End of line" })
 map("n", "<End>", "$", { desc = "End of line" })
 map("v", "<End>", "$", { desc = "End of line" })
+
+-- =============================================================================
+-- INSERT MODE: полезные хоткеи, не выходя из режима вставки
+-- =============================================================================
+
+
+-- 🧭 Навигация
+vim.keymap.set("i", "<C-h>", "<Left>", opts)
+vim.keymap.set("i", "<C-l>", "<Right>", opts)
+vim.keymap.set("i", "<C-k>", "<Up>", opts)
+vim.keymap.set("i", "<C-j>", "<Down>", opts)
+
+vim.keymap.set("i", "<C-Left>", "<C-o>b", opts)   -- слово назад
+vim.keymap.set("i", "<C-Right>", "<C-o>w", opts)  -- слово вперёд
+vim.keymap.set("i", "<C-a>", "<Home>", opts)      -- начало строки
+vim.keymap.set("i", "<C-e>", "<End>", opts)       -- конец строки
+
+-- 🗑️ Удаление
+vim.keymap.set("i", "<C-BS>", "<C-o>db", opts)    -- удалить слово назад
+vim.keymap.set("i", "<C-Del>", "<C-o>dw", opts)   -- удалить слово вперёд
+vim.keymap.set("i", "<C-u>", "<C-o>0d$", opts)    -- удалить до начала строки
+
+-- 📋 Копирование/вставка
+vim.keymap.set("i", "<C-v>", "<C-r>+", { desc = "Paste from system clipboard" })
+
+
+-- ⚡ Гибридные: одна команда Normal, не выходя из Insert
+vim.keymap.set("i", "<C-x><C-o>", "<C-o>.", { desc = "Repeat last change" })
+vim.keymap.set("i", "<C-x><C-f>", "<C-o>gf", { desc = "Open file under cursor" }) -- открыть файл под курсором
