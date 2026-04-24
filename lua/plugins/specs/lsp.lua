@@ -115,13 +115,16 @@ return {
         },
         float = { border = "rounded", source = true, header = "", prefix = "" },
       })
-
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require("blink.cmp").get_lsp_capabilities()
 
       -- ✅ Регистрируем конфиги
       vim.lsp.config("gopls", {
         capabilities = capabilities,
         root_dir = vim.fs.root(0, { "go.work", "go.mod", ".git" }),
+            flags = {
+        debounce_text_changes = 150,  -- ✅ добавить
+    },
         settings = {
           gopls = {
             gofumpt        = true,
