@@ -1,0 +1,181 @@
+{
+  "HTTP Handler": {
+    "prefix": "wr",
+    "body": [
+      "func ${1:handlerName}(w http.ResponseWriter, r *http.Request) {",
+      "\t$0",
+      "}"
+    ],
+    "description": "HTTP handler function"
+  },
+  "HTTP Handler Method": {
+    "prefix": "wrm",
+    "body": [
+      "func (${1:s} *${2:Server}) ${3:handlerName}(w http.ResponseWriter, r *http.Request) {",
+      "\t$0",
+      "}"
+    ],
+    "description": "HTTP handler method on struct"
+  },
+  "JSON Response": {
+    "prefix": "jsonw",
+    "body": [
+      "w.Header().Set(\"Content-Type\", \"application/json\")",
+      "w.WriteHeader(${1:http.StatusOK})",
+      "json.NewEncoder(w).Encode(${2:data})"
+    ],
+    "description": "Write JSON response"
+  },
+  "Error Response": {
+    "prefix": "httperr",
+    "body": [
+      "http.Error(w, ${1:\"not found\"}, ${2:http.StatusNotFound})",
+      "return"
+    ],
+    "description": "http.Error + return"
+  },
+  "If Error Return": {
+    "prefix": "ier",
+    "body": [
+      "if err != nil {",
+      "\treturn ${1:err}",
+      "}"
+    ],
+    "description": "if err != nil { return err }"
+  },
+  "If Error HTTP": {
+    "prefix": "ierw",
+    "body": [
+      "if err != nil {",
+      "\thttp.Error(w, err.Error(), http.StatusInternalServerError)",
+      "\treturn",
+      "}"
+    ],
+    "description": "if err != nil { http.Error + return }"
+  },
+  "Main Function": {
+    "prefix": "main",
+    "body": [
+      "func main() {",
+      "\t$0",
+      "}"
+    ],
+    "description": "main function"
+  },
+  "HTTP Server": {
+    "prefix": "srv",
+    "body": [
+      "mux := http.NewServeMux()",
+      "mux.HandleFunc(\"${1:GET} ${2:/path}\", ${3:handler})",
+      "",
+      "srv := &http.Server{",
+      "\tAddr:         \"${4::8080}\",",
+      "\tHandler:      mux,",
+      "\tReadTimeout:  5 * time.Second,",
+      "\tWriteTimeout: 10 * time.Second,",
+      "}",
+      "",
+      "if err := srv.ListenAndServe(); err != nil {",
+      "\tlog.Fatal(err)",
+      "}"
+    ],
+    "description": "HTTP server with mux"
+  },
+  "Struct": {
+    "prefix": "st",
+    "body": [
+      "type ${1:Name} struct {",
+      "\t${2:Field} ${3:type}",
+      "}"
+    ],
+    "description": "struct definition"
+  },
+  "Interface": {
+    "prefix": "iface",
+    "body": [
+      "type ${1:Name} interface {",
+      "\t${2:Method}() ${3:error}",
+      "}"
+    ],
+    "description": "interface definition"
+  },
+  "Goroutine": {
+    "prefix": "go",
+    "body": [
+      "go func() {",
+      "\t$0",
+      "}()"
+    ],
+    "description": "goroutine"
+  },
+  "Select": {
+    "prefix": "sel",
+    "body": [
+      "select {",
+      "case ${1:v} := <-${2:ch}:",
+      "\t$0",
+      "case <-ctx.Done():",
+      "\treturn ctx.Err()",
+      "}"
+    ],
+    "description": "select statement with context"
+  },
+  "Context With Cancel": {
+    "prefix": "ctx",
+    "body": [
+      "ctx, cancel := context.WithCancel(${1:context.Background()})",
+      "defer cancel()"
+    ],
+    "description": "context with cancel"
+  },
+  "Context With Timeout": {
+    "prefix": "ctxt",
+    "body": [
+      "ctx, cancel := context.WithTimeout(${1:context.Background()}, ${2:5*time.Second})",
+      "defer cancel()"
+    ],
+    "description": "context with timeout"
+  },
+  "Log Fatal": {
+    "prefix": "lf",
+    "body": [
+      "log.Fatalf(\"${1:message}: %v\", ${2:err})"
+    ],
+    "description": "log.Fatalf"
+  },
+  "Fmt Errorf": {
+    "prefix": "fe",
+    "body": [
+      "fmt.Errorf(\"${1:context}: %w\", ${2:err})"
+    ],
+    "description": "fmt.Errorf with %w wrap"
+  },
+  "Test Function": {
+    "prefix": "tf",
+    "body": [
+      "func Test${1:Name}(t *testing.T) {",
+      "\t$0",
+      "}"
+    ],
+    "description": "test function"
+  },
+  "Table Test": {
+    "prefix": "tt",
+    "body": [
+      "tests := []struct {",
+      "\tname string",
+      "\t${2:input} ${3:string}",
+      "\twant ${4:string}",
+      "}{",
+      "\t{name: \"${5:case}\", ${2:input}: ${6:\"\"}, want: ${7:\"\"}},",
+      "}",
+      "",
+      "for _, tc := range tests {",
+      "\tt.Run(tc.name, func(t *testing.T) {",
+      "\t\t$0",
+      "\t})",
+      "}"
+    ],
+    "description": "table-driven test"
+  }
+}
