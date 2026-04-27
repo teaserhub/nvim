@@ -245,9 +245,33 @@ aucmd("BufEnter", {
     end,
 })
 
+-- =============================================================================
+-- 6. Убираем уведомления об ошибках справа 
+-- =============================================================================
+
+
+vim.diagnostic.config({
+  virtual_text = false,  -- ❌ убирает текст в строке
+  virtual_lines = false,  -- ❌ убирает текст в строке
+  underline = true,      -- ✅ оставляет подчёркивание
+  signs = true,          -- ✅ иконки слева
+  update_in_insert = false,
+  severity_sort = true,
+})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focus = false,
+      border = "rounded",
+      source = "always",
+    })
+  end,
+})
+
 
 -- =============================================================================
--- 6. КАСТОМНЫЕ HIGHLIGHTS (treesitter-совместимые)
+-- 7. КАСТОМНЫЕ HIGHLIGHTS (treesitter-совместимые)
 -- Применяем и сразу, и при каждой смене colorscheme
 -- =============================================================================
 

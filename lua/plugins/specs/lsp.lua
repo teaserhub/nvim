@@ -101,7 +101,8 @@ return {
     config = function()
       -- Диагностика
       vim.diagnostic.config({
-        virtual_text     = { prefix = "●", spacing = 2 },
+        virtual_text     = false,
+        -- virtual_text     = { prefix = "●", spacing = 2 },
         underline        = true,
         update_in_insert = false,
         severity_sort    = true,
