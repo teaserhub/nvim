@@ -66,7 +66,8 @@ return {
 
       sources = {
         -- ✅ path нужен: дополнение путей к файлам при import и os.Open
-        default = { "lsp", "snippets", "path" },
+        default = { "lsp", "path" },
+        -- default = { "lsp", "snippets", "path" },
       },
 
       snippets = {
